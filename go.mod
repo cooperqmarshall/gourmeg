@@ -1,4 +1,4 @@
-module htmx-text
+module htmx-test
 
 go 1.20
 

@@ -5,9 +5,12 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"htmx-test/api"
 )
 
 type Templates struct {
@@ -34,6 +37,34 @@ func main() {
 
   e.GET("/", func(c echo.Context) error {
     return c.Render(http.StatusOK, "index.html", nil)
+  })
+
+  e.GET("/book/:id", func(c echo.Context) error {
+    id_str := c.Param("id")
+    id, err := strconv.ParseInt(id_str, 10, 0)
+    if err != nil {log.Fatalf("id param not a number: %b", err)}
+
+    api.GetBook(int(id))
+    return c.Render(http.StatusOK, "index.html", nil)
+  })
+
+  e.GET("/chapter/:id", func(c echo.Context) error {
+    id_str := c.Param("id")
+    id, err := strconv.ParseInt(id_str, 10, 0)
+    if err != nil {log.Fatalf("id param not a number: %b", err)}
+
+    api.GetChapter(int(id))
+    return c.Render(http.StatusOK, "index.html", nil)
+  })
+
+  e.GET("/recipe/:id", func(c echo.Context) error {
+    id_str := c.Param("id")
+    id, err := strconv.ParseInt(id_str, 10, 0)
+    if err != nil {log.Fatalf("id param not a number: %b", err)}
+
+    recipe := api.GetRecipe(int(id))
+    _ = recipe
+    return c.Render(http.StatusOK, "recipe_page", recipe)
   })
 
   e.Logger.Fatal(e.Start(":1323"))

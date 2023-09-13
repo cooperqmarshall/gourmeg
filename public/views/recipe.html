@@ -1,1 +1,36 @@
-{{define "recipe"}}Hello, {{.}}!{{end}}
+{{define "recipe_page"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div>
+      id: {{.Id}}
+      name: {{.Name}}
+      {{ if .Ingredients }}
+    </div>
+    <div>
+      Ingredients:
+      <ul>
+        {{ range $i := .Ingredients }}
+        <li>{{$i}}</li>
+        {{ end }}
+      </ul>
+      {{ end }} 
+      {{ if .Instructions }}
+      Instructions:
+      <ol>
+        {{ range $i := .Instructions }}
+        <li>{{$i}}</li>
+        {{ end }}
+      </ol>
+      {{ end }}
+    </div>
+  </body>
+</html>
+{{end}} {{define "recipe"}} Hello, {{.}}! {{end}}
