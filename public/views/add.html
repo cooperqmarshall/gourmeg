@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/css/styles.css" rel="stylesheet" />
+  <script src="https://unpkg.com/htmx.org@1.9.6"
+    integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+    crossorigin="anonymous"></script>
+  <script src="/js/scripts.js" defer></script>
+</head>
+
+<body>
+  {{ template "nav" }}
+  <div>
+    Add Recipe
+    <form hx-post="/recipe" hx-swap="afterend">
+      <label for="url">URL:</label>
+      <input type="text" name="url" value="" />
+      <label for="list">List:</label>
+      <input hx-post="/list_search" hx-trigger="keyup changed delay:500ms" hx-target="#list-search-results"
+        hx-indicator=".htmx-indicator" id="list-input" type="text" name="list" value="" />
+      <div id="list-search-results"></div>
+      <input type="hidden" name="list_id" value="1" />
+      <button type="submit">Submit!</button>
+    </form>
+  </div>
+</body>
+
+</html>
+
+{{ define "add_recipe_result" }}
+<a href="/recipe/{{ .Id }}">{{ .Name }}</a>
+{{ end }}

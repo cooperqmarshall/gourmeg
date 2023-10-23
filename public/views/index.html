@@ -1,14 +1,27 @@
+{{ define "home" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
   </head>
   <body>
+    {{ template "nav" }}
     <div>
-      {{ template "recipe" "tes"}}
+    {{ template "list_of_items" . }}
     </div>
   </body>
 </html>
+{{ end }}
+
+{{ define "nav" }}
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/add">Add</a></li>
+        <li><a href="/search">Search</a></li>
+      </ul>
+    </nav>
+{{ end }}

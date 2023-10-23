@@ -1,0 +1,48 @@
+{{define "list_page"}}
+<html lang="en">
+  <head>
+    <title>Gourmeg | {{.Name}}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://unpkg.com/htmx.org@1.9.6"
+      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+      crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    {{ template "nav" }}
+    <div>List | id: {{.Id}} name: {{.Name}}</div>
+    <div>
+      {{ template "list_of_items" .Children }}
+    </div>
+  </body>
+</html>
+{{end}} 
+
+{{ define "list_of_items" }}
+<ul>
+  {{ range . }}
+  {{ template "item" . }}
+  {{ else }}
+  {{ end }}
+</ul>
+{{ end }}
+
+{{ define "item" }}
+<li>
+  <a href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type }}) 
+  <button hx-get='/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}'
+    hx-target='closest li'>Edit</button>
+</li>
+{{ end }}
+
+{{ define "edit_item" }}
+<li hx-target='closest li'>
+  <input name="name" value="{{ .Name }}">({{ .Type }}) 
+  <button hx-get='/api/item/{{ .Id }}?type={{ .Type }}'>Cancel</button>
+  <button hx-put='/item/{{ .Id }}?type={{ .Type }}' 
+    hx-include='closest li'>Confirm</button>
+  <button>Delete</button>
+</li>
+{{ end }}
