@@ -1,24 +1,25 @@
 {{define "recipe_page"}}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Gourmeg | {{.Name}}</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="/css/styles.css" rel="stylesheet" />
-  </head>
-
+{{ template "head" . }}
   <body>
     {{ template "nav" }}
-    <div>Recipe | id: {{ .Id }} name: {{ .Name }}</div>
-    <div>
-      <ul>
+    <h1 class="text-3xl my-2 flex items-top">
+      <img class="w-12 inline-block mx-2" src="/static/cooking.svg" alt="">
+      {{ .Name }} ({{ .Id }})
+    </h1>
+    <hr class="ml-16">
+    <div class="mx-16 my-2">
+      <h2 class="text-xl">Ingredients:</h2>
+      <ul class="list-disc list-inside">
         {{ range $i := .Ingredients }}
         <li>{{ $i }}</li>
         {{ else }}
         {{ end }}
       </ul>
-      Instructions:
-      <ol>
+      <br>
+      <h2 class="text-xl">Instructions:</h2>
+      <ol class="list-decimal list-inside">
         {{ range $i := .Instructions }}
         <li>{{$i}}</li>
         {{ else }}

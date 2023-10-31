@@ -79,6 +79,7 @@ func main() {
 		}
 
 		recipe, err := api.GetRecipe(db, int(id))
+    fmt.Printf("%d, %d", id, recipe.Id)
 		return c.Render(http.StatusOK, "recipe_page", recipe)
 	})
 
@@ -116,7 +117,7 @@ func main() {
 		return c.Render(http.StatusOK, "item", i)
 	})
 
-	e.PUT("/item/:id", func(c echo.Context) error {
+  e.PUT("/item/:type/:id", func(c echo.Context) error {
 		var i api.Item
     err := c.Bind(&i)
     fmt.Printf("%s\n", i.Type)
@@ -129,6 +130,21 @@ func main() {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
 		}
 		return c.Render(http.StatusOK, "item", recipe)
+	})
+
+  e.DELETE("/item/:type/:id", func(c echo.Context) error {
+		var i api.Item
+    err := c.Bind(&i)
+    fmt.Printf("%s\n", i.Type)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
+		}
+
+		err = api.DeleteItem(db, i)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
+		}
+		return c.NoContent(http.StatusOK)
 	})
 
 	e.POST("/recipe", func(c echo.Context) error {
@@ -153,7 +169,7 @@ func main() {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
 		}
 
-		return c.Render(http.StatusOK, "list_of_items", items)
+		return c.Render(http.StatusOK, "list_search_results", items)
 	})
 
 	e.GET("/add", func(c echo.Context) error {

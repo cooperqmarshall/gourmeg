@@ -1,24 +1,21 @@
 {{define "list_page"}}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Gourmeg | {{.Name}}</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="/css/styles.css" rel="stylesheet" />
-    <script src="https://unpkg.com/htmx.org@1.9.6"
-      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
-      crossorigin="anonymous"></script>
-  </head>
-
+{{ template "head" }}
   <body>
     {{ template "nav" }}
-    <div>List | id: {{.Id}} name: {{.Name}}</div>
-    <div>
+    <h1 class="text-3xl my-2 flex items-top">
+    <img class="w-12 inline-block mx-2" src="/static/book.svg" alt="">
+      {{ .Name }} ({{ .Id }})
+    </h1>
+    <hr class="ml-16">
+    <div class="my-2 mx-16">
       {{ template "list_of_items" .Children }}
     </div>
   </body>
 </html>
 {{end}} 
+
 
 {{ define "list_of_items" }}
 <ul>
@@ -29,20 +26,35 @@
 </ul>
 {{ end }}
 
+
 {{ define "item" }}
-<li>
-  <a href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type }}) 
-  <button hx-get='/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}'
-    hx-target='closest li'>Edit</button>
+<li class="p-1" hx-target="this" hx-swap="outerHTML">
+  <a class="underline"
+     href="/{{ .Type }}/{{ .Id }}"
+    >{{ .Name }}</a> ({{ .Type }})
+  <button 
+    class="underline"
+    hx-get='/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}'
+  >...</button>
 </li>
 {{ end }}
 
+
 {{ define "edit_item" }}
-<li hx-target='closest li'>
-  <input name="name" value="{{ .Name }}">({{ .Type }}) 
-  <button hx-get='/api/item/{{ .Id }}?type={{ .Type }}'>Cancel</button>
-  <button hx-put='/item/{{ .Id }}?type={{ .Type }}' 
-    hx-include='closest li'>Confirm</button>
-  <button>Delete</button>
+<li class="p-1" hx-target="this" hx-swap="outerHTML">
+  <input
+    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+    name="name" value="{{ .Name }}">
+  <button class="underline"
+    hx-get='/api/item/{{ .Id }}?type={{ .Type }}'
+    >cancel</button>
+  <button class="underline"
+    hx-put='/item/{{ .Type }}/{{ .Id }}' 
+    hx-include='closest li'
+    >confirm</button>
+  <button class="underline"
+    hx-delete='/item/{{ .Type }}/{{ .Id }}'
+    hx-confirm="Are you sure?"
+    >delete</button>
 </li>
 {{ end }}

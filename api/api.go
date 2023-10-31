@@ -26,7 +26,7 @@ type List struct {
 type Item struct {
 	Id   int    `param:"id"`
 	Name string `query:"name" form:"name"`
-	Type string `query:"type"`
+	Type string `query:"type" param:"type"`
 }
 
 func GetTopLevelLists(db *sql.DB) ([]Item, error) {
@@ -131,9 +131,27 @@ func PutItem(db *sql.DB, i Item) (Item, error) {
 	return i, nil
 }
 
+func DeleteItem(db *sql.DB, i Item) error {
+	var stmt string
+	if i.Type == "recipe" {
+		stmt = `delete from link where child_id = $1 and child_type = $2`
+	} else if i.Type == "list" {
+		stmt = `delete from link where child_id = $1 and child_type = $2`
+	} else {
+		return errors.New("type is not list or recipe")
+	}
+
+	_, err := db.Exec(stmt, i.Id, i.Type)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetRecipe(db *sql.DB, id int) (Recipe, error) {
 	var r Recipe
-	row := db.QueryRow(`select id, name, ingredients, instructions, 'recipe' as type
+	row := db.QueryRow(`select id, name, ingredients, instructions
                       from recipe 
                       where id = $1`, id)
 	err := row.Scan(&r.Id, &r.Name, pq.Array(&r.Ingredients), pq.Array(&r.Instructions))
