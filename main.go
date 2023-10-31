@@ -46,6 +46,7 @@ func main() {
 	e.Static("/api", "public/api")
 	e.Static("/css", "public/css")
 	e.Static("/js", "public/js")
+  e.Static("/static", "public/assets")
 
 	e.GET("/", func(c echo.Context) error {
 		lists, err := api.GetTopLevelLists(db)
