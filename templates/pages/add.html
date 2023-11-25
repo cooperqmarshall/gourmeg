@@ -4,6 +4,7 @@
   {{ template "head" }}
   <body>
     {{ template "nav" }}
+    <div class="max-w-screen-md mx-auto">
     <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
       <img class="w-14 inline-block pr-2" src="/static/add_recipe.svg" alt="" />
       Add Recipe
@@ -41,9 +42,12 @@
         </button>
       </form>
     </div>
+    </div>
   </body>
 </html>
-{{ end }} {{ define "add_recipe_result" }}
+{{ end }} 
+
+{{ define "add_recipe_result" }}
 <a href="/recipe/{{ .Id }}">{{ .Name }}</a>
 {{ end }} {{ define "list_search_results" }} {{ range . }}
 <div onClick="handelListSearchResultClick(event)">{{ .Name }}</div>
