@@ -1,29 +1,27 @@
 {{define "recipe_page"}}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-{{ template "head" . }}
+  {{ template "head" . }}
   <body>
     {{ template "nav" }}
-    <h1 class="text-3xl my-2 flex items-top">
-      <img class="w-12 inline-block mx-2" src="/static/cooking.svg" alt="">
+    <h1 class="text-3xl my-2 flex items-center">
+      <img class="w-12 inline-block mx-2" src="/static/cooking.svg" alt="" />
       {{ .Name }} ({{ .Id }})
     </h1>
-    <hr class="ml-16">
+    <hr class="ml-16" />
     <div class="mx-16 my-2">
       <h2 class="text-xl">Ingredients:</h2>
       <ul class="list-disc list-inside">
         {{ range $i := .Ingredients }}
         <li>{{ $i }}</li>
-        {{ else }}
-        {{ end }}
+        {{ else }} {{ end }}
       </ul>
-      <br>
+      <br />
       <h2 class="text-xl">Instructions:</h2>
       <ol class="list-decimal list-inside">
         {{ range $i := .Instructions }}
         <li>{{$i}}</li>
-        {{ else }}
-        {{ end }}
+        {{ else }} {{ end }}
       </ol>
     </div>
   </body>
