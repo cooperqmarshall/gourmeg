@@ -1,53 +1,38 @@
 {{ define "add" }}
 <!DOCTYPE html>
 <html lang="en">
-  {{ template "head" }}
-  <body>
+{{ template "head" }}
+
+<body>
     {{ template "nav" }}
     <div class="max-w-screen-md mx-auto">
-      <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
-        <img
-          class="w-14 inline-block pr-2"
-          src="/static/add_recipe.svg"
-          alt=""
-        />
-        Add Recipe
-      </h1>
-      <hr class="ml-14 mr-2" />
-      <div class="my-2 ml-16 mr-2">
-        <form hx-post="/recipe" hx-swap="afterend">
-          <label for="url">URL:</label>
-          <input
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
-            type="text"
-            name="url"
-            value=""
-          />
-          <br />
-          <label for="list">List:</label>
-          <input
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
-            hx-post="/list_search"
-            hx-trigger="keyup changed delay:500ms"
-            hx-target="#list-search-results"
-            hx-swap="innerHTML"
-            id="list-input"
-            type="text"
-            name="list"
-            value=""
-          />
-          <div class="my-1" id="list-search-results"></div>
-          <input type="hidden" name="list_id" value="-1" />
-          <button
-            class="text-gray-50 p-1 rounded border border-gray-300 bg-teal-400"
-            type="submit"
-          >
-            Submit!
-          </button>
-        </form>
-      </div>
+        <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
+            <img class="w-14 inline-block pr-2" src="/static/add_recipe.svg" alt="" />
+            Add Recipe
+        </h1>
+        <hr class="ml-14 mr-2" />
+        <div class="my-2 ml-16 mr-2">
+            <form hx-post="/recipe" hx-swap="afterend">
+                <label for="url">URL:</label>
+                <input
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
+                    type="text" name="url" value="" />
+                <br />
+                <label for="list">List:</label>
+                <input
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
+                    hx-post="/list_search" hx-trigger="keyup changed delay:500ms" hx-target="#list-search-results"
+                    hx-swap="innerHTML" id="list-input" type="text" name="list" value="" />
+                <div class="my-1" id="list-search-results"></div>
+                <input type="hidden" name="list_id" value="-1" />
+                <button class="text-gray-50 p-1 rounded border border-gray-300 bg-teal-400" type="submit">
+                    Submit!
+                </button>
+            </form>
+        </div>
     </div>
-  </body>
+</body>
+
 </html>
 {{ end }} {{ define "add_recipe_result" }}
 <a href="/recipe/{{ .Id }}">{{ .Name }}</a>

@@ -1,41 +1,33 @@
 {{ define "list_of_items" }}
 <ul class="list-disc list-inside">
-  {{ range . }} {{ template "item" . }} {{ else }} {{ end }}
+    {{ range . }} {{ template "item" . }} {{ else }} {{ end }}
 </ul>
-{{ end }} {{ define "item" }}
+{{ end }}
+
+{{ define "item" }}
 <li class="py-1" hx-target="this" hx-swap="outerHTML">
-  <a class="underline" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type
-  }})
-  <button
-    class="underline"
-    hx-get="/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}"
-  >
-    ...
-  </button>
+    <a class="underline" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type }})
+    <button class="underline" hx-get="/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}">
+        ...
+    </button>
 </li>
-{{ end }} {{ define "edit_item" }}
+{{ end }}
+
+{{ define "edit_item" }}
 <li class="py-1" hx-target="this" hx-swap="outerHTML">
-  <input
-    class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500"
-    name="name"
-    value="{{ .Name }}"
-  />
-  <button class="underline" hx-get="/api/item/{{ .Id }}?type={{ .Type }}">
-    cancel
-  </button>
-  <button
-    class="underline"
-    hx-put="/item/{{ .Type }}/{{ .Id }}"
-    hx-include="closest li"
-  >
-    confirm
-  </button>
-  <button
-    class="underline"
-    hx-delete="/item/{{ .Type }}/{{ .Id }}"
-    hx-confirm="Are you sure?"
-  >
-    delete
-  </button>
+    <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="name"
+        value="{{ .Name }}" />
+
+    <button class="underline" hx-get="/api/item/{{ .Id }}?type={{ .Type }}">
+        cancel
+    </button>
+
+    <button class="underline" hx-put="/item/{{ .Type }}/{{ .Id }}" hx-include="closest li">
+        confirm
+    </button>
+
+    <button class="underline" hx-delete="/item/{{ .Type }}/{{ .Id }}" hx-confirm="Are you sure?">
+        delete
+    </button>
 </li>
 {{ end }}

@@ -1,19 +1,24 @@
 {{define "list_page"}}
 <!DOCTYPE html>
 <html lang="en">
-  {{ template "head" }}
-  <body>
+{{ template "head" }}
+
+<body>
     {{ template "nav" }}
     <div class="max-w-screen-md mx-auto">
-      <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
-        <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
-        {{ .Name }} ({{ .Id }})
-      </h1>
-      <hr class="ml-14 mr-2" />
-      <div class="my-2 ml-16 mr-2">
-        {{ template "list_of_items" .Children }}
-      </div>
+        <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
+            <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
+            {{ .Name }} ({{ .Id }})
+            <button class="underline" hx-get="/api/list/{{ .Id }}/edit">
+                ...
+            </button>
+        </h1>
+        <hr class="ml-14 mr-2" />
+        <div class="my-2 ml-16 mr-2">
+            {{ template "list_of_items" .Children }}
+        </div>
     </div>
-  </body>
+</body>
+
 </html>
 {{end}}
