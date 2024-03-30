@@ -9,7 +9,7 @@
         <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
             <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
             {{ .Name }} ({{ .Id }})
-            <button class="underline" hx-get="/api/list/{{ .Id }}/edit">
+            <button class="underline" hx-get="/list/{{ .Id }}/edit">
                 ...
             </button>
         </h1>

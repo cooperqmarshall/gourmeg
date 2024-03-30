@@ -7,7 +7,7 @@
 {{ define "item" }}
 <li class="py-1" hx-target="this" hx-swap="outerHTML">
     <a class="underline" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type }})
-    <button class="underline" hx-get="/api/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}">
+    <button class="underline" hx-get="/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}">
         ...
     </button>
 </li>
@@ -18,7 +18,7 @@
     <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="name"
         value="{{ .Name }}" />
 
-    <button class="underline" hx-get="/api/item/{{ .Id }}?type={{ .Type }}">
+    <button class="underline" hx-get="/item/{{ .Id }}?type={{ .Type }}">
         cancel
     </button>
 

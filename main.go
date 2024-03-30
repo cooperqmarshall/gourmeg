@@ -56,9 +56,9 @@ func main() {
 	e.GET("/list/:id", h.GetList)
 	e.POST("/list_search", h.GetLists)
 	// list item
-	e.GET("/api/item/:id", h.GetItem)
+	e.GET("/item/:id", h.GetItem)
 	e.PUT("/item/:type/:id", h.PutItem)
-	e.GET("/api/item/:id/edit", h.EditItem)
+	e.GET("/item/:id/edit", h.EditItem)
 	e.DELETE("/item/:type/:id", h.DeleteItem)
 
 	e.Debug = true
