@@ -5,20 +5,51 @@
 
 <body>
     {{ template "nav" }}
-    <div class="max-w-screen-md mx-auto">
+    <div id="list-content" class="max-w-screen-md mx-auto">
         <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
             <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
             {{ .Name }} ({{ .Id }})
-            <button class="underline" hx-get="/list/{{ .Id }}/edit">
+            <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#list-content">
                 ...
             </button>
         </h1>
-        <hr class="ml-14 mr-2" />
-        <div class="my-2 ml-16 mr-2">
+        <hr class="ml-14 mr-2 py-1" />
+        <div class="my-2 ml-16 mr-2 text-lg">
             {{ template "list_of_items" .Children }}
         </div>
     </div>
 </body>
 
 </html>
-{{end}}
+{{ end }}
+
+{{ define "edit_list" }}
+<h1 class="text-3xl mt-2 mx-2 flex flex-wrap items-top items-center">
+    <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
+    <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="name"
+        value="{{ .Name }}" />
+    ({{ .Id }})
+</h1>
+<aside class="ml-16">
+    <button class="underline" hx-get="/list/{{ .Id }}" hx-target="body">
+        cancel
+    </button>
+
+    <button class="underline" hx-put="/list/{{ .Id }}" hx-target="body">
+        confirm
+    </button>
+
+    <button class="underline" hx-delete="/list/{{ .Id }}" hx-confirm="Are you sure?" hx-target="body">
+        delete
+    </button>
+</aside>
+<div class="mb-2 ml-16 mr-2 text-lg">
+    <ul class="">
+        {{ range .Children }}
+        <li class="py-1">
+            <input type="checkbox" id="{{ .Id }}" /> <label for="{{ .Id }}">{{ .Name }} ({{ .Type }})</label>
+        </li>
+        {{ else }} {{ end }}
+    </ul>
+</div>
+{{ end }}

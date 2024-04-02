@@ -52,9 +52,12 @@ func main() {
 	// recipe
 	e.GET("/recipe/:id", h.GetRecipe)
 	e.POST("/recipe", h.PostRecipe)
+
 	// list
 	e.GET("/list/:id", h.GetList)
+	e.GET("/list/:id/edit", h.EditList)
 	e.POST("/list_search", h.GetLists)
+
 	// list item
 	e.GET("/item/:id", h.GetItem)
 	e.PUT("/item/:type/:id", h.PutItem)
