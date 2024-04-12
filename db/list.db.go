@@ -12,12 +12,14 @@ type List struct {
 
 func GetTopLevelLists(db *sql.DB) ([]Item, error) {
 	var l []Item
-	rows, err := db.Query(`select distinct parent_id, name, 'list'
-                        from link 
-                        left join list on id = parent_id
-                        where parent_id not in (select child_id 
-                                                from link 
-                                                where child_type != 'recipe')`)
+	rows, err := db.Query(`
+        select id, name, 'list'
+        from list
+        where id not in (select child_id 
+                            from link 
+                            where child_type = 'list')
+    `)
+
 	if err != nil {
 		return l, err
 	}
