@@ -36,7 +36,7 @@ func (handler Handler) GetLists(c echo.Context) error {
 }
 
 func (handler Handler) EditList(c echo.Context) error {
-    id_str := c.Param("id")
+	id_str := c.Param("id")
 
 	id, err := strconv.Atoi(id_str)
 	if err != nil {
@@ -47,7 +47,7 @@ func (handler Handler) EditList(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
-    c.Logger().Infof("%s", l)
+	c.Logger().Infof("%s", l)
 
 	return c.Render(http.StatusOK, "edit_list", l)
 }
