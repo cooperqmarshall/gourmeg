@@ -51,3 +51,19 @@ func (handler Handler) EditList(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "edit_list", l)
 }
+
+func (handler Handler) DeleteList(c echo.Context) error {
+	id_str := c.Param("id")
+
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("id param (%s) not a number", id_str))
+	}
+
+	err = db.DeleteList(handler.DB, int(id))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
+	}
+
+    return c.Redirect(http.StatusSeeOther, "/")
+}

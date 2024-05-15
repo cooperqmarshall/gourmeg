@@ -56,6 +56,7 @@ func main() {
 	// list
 	e.GET("/list/:id", h.GetList)
 	e.GET("/list/:id/edit", h.EditList)
+	e.DELETE("/list/:id", h.DeleteList)
 	e.POST("/list_search", h.GetLists)
 
 	// list item

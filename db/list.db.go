@@ -91,3 +91,14 @@ func SearchList(db *sql.DB, list string) ([]Item, error) {
 
 	return items, nil
 }
+
+func DeleteList(db *sql.DB, id int) error {
+	_, err := db.Exec(`delete from link 
+                    where child_id = $1 
+                    and child_type = 'list'`, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
