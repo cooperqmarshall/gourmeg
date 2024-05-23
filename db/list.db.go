@@ -53,7 +53,8 @@ func GetList(db *sql.DB, id int) (List, error) {
                     from link 
                     left join list on link.child_id = list.id and child_type = 'list' 
                     left join recipe on link.child_id = recipe.id and child_type = 'recipe' 
-                    where parent_id = $1`, id)
+                    where parent_id = $1
+                    order by id desc`, id)
 	if err != nil {
 		return l, err
 	}
