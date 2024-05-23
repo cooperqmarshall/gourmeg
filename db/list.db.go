@@ -103,3 +103,22 @@ func DeleteList(db *sql.DB, id int) error {
 
 	return nil
 }
+
+func PostList(db *sql.DB, name string, parent_id int) (Item, error) {
+	var i Item
+    i.Type = "list"
+	row := db.QueryRow(`insert into list (name) values ($1) returning id, name`, name)
+
+	err := row.Scan(&i.Id, &i.Name)
+	if err != nil {
+		return i, err
+	}
+
+    // TODO: add default for parent_id as root list for user
+	_, err = db.Exec(`insert into link (parent_id, child_id, child_type) values ($1, $2, 'list')`, parent_id, i.Id)
+	if err != nil {
+		return i, err
+	}
+
+	return i, nil
+}

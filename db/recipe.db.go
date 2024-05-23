@@ -29,10 +29,6 @@ func GetRecipe(db *sql.DB, id int) (Recipe, error) {
 }
 
 func PostRecipe(db *sql.DB, r *Recipe) error {
-	r.Ingredients = []string{"test", "test2"}
-	r.Instructions = []string{"test", "test2"}
-	r.Name = "test"
-
 	row, err := db.Query(`insert into recipe
                         (name, url, ingredients, instructions)
                         values ($1, $2, $3, $4)
@@ -47,11 +43,35 @@ func PostRecipe(db *sql.DB, r *Recipe) error {
 		return err
 	}
 
-	_, err = db.Exec(`insert into link
-                    values ($1, $2, 'recipe')`, r.ListId, r.Id)
+	_, err = db.Exec(`insert into link values($1, $2, 'recipe')`, r.ListId, r.Id)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func GetRecipeFromURL(db *sql.DB, url string) (Recipe, error) {
+	var r Recipe
+	row := db.QueryRow(`select 
+                            recipe.id, 
+                            recipe.name, 
+                            ingredients, 
+                            instructions, 
+                            list.name as list
+                      from recipe 
+                      left join link on (recipe.id = child_id and link.child_type = 'recipe')
+                      left join list on (parent_id = list.id)
+                      where recipe.url = $1`, url)
+	err := row.Scan(
+		&r.Id,
+		&r.Name,
+		pq.Array(&r.Ingredients),
+		pq.Array(&r.Instructions),
+		&r.List,
+	)
+	if err != nil {
+		return r, err
+	}
+	return r, nil
 }

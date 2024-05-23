@@ -47,7 +47,6 @@ func (handler Handler) EditList(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
-	c.Logger().Infof("%s", l)
 
 	return c.Render(http.StatusOK, "edit_list", l)
 }
@@ -65,5 +64,30 @@ func (handler Handler) DeleteList(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
 	}
 
-    return c.Redirect(http.StatusSeeOther, "/")
+	return c.Redirect(http.StatusSeeOther, "/")
+}
+
+func (handler Handler) PostList(c echo.Context) error {
+	id_str := c.QueryParam("parent_id")
+
+	parent_id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("parent_id param (%s) not a number", id_str))
+	}
+
+	name := c.FormValue("name")
+	if len(name) == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprint("list name cannot be empty"))
+	}
+
+	if len(name) > 512 {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprint("list name cannot be longer than 512 characters"))
+	}
+
+	item, err := db.PostList(handler.DB, name, parent_id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
+	}
+
+	return c.Render(http.StatusOK, "item", item)
 }

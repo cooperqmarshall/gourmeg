@@ -71,6 +71,28 @@ func (handler Handler) DeleteItem(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+func (handler Handler) AddListItem(c echo.Context) error {
+	id_str := c.QueryParam("parent_id")
+
+	parent_id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("parent_id param (%s) not a number", id_str))
+	}
+
+	return c.Render(http.StatusOK, "add_list_item", parent_id)
+}
+
+func (handler Handler) AddRecipeItem(c echo.Context) error {
+	id_str := c.QueryParam("list_id")
+
+	list_id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("list_id param (%s) not a number", id_str))
+	}
+
+	return c.Render(http.StatusOK, "add_recipe_item", list_id)
+}
+
 func (handler Handler) ItemSearch(c echo.Context) error {
 	search_term := c.FormValue("search_term")
 	search_results, err := db.ItemSearch(handler.DB, search_term)

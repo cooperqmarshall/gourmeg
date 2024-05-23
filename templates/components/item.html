@@ -17,17 +17,59 @@
 <li class="py-1" hx-target="this" hx-swap="outerHTML">
     <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="name"
         value="{{ .Name }}" />
-
     <button class="underline" hx-get="/item/{{ .Id }}?type={{ .Type }}">
         cancel
     </button>
-
     <button class="underline" hx-put="/item/{{ .Type }}/{{ .Id }}" hx-include="closest li">
         confirm
     </button>
-
     <button class="underline" hx-delete="/item/{{ .Type }}/{{ .Id }}" hx-confirm="Are you sure?">
         delete
+    </button>
+</li>
+{{ end }}
+
+{{ define "add_item_options" }}
+<li hx-target="this" hx-swap="outerHTML">
+    <button class='underline' hx-get='/item/list/add?parent_id={{ .Id }}'> + Add List</button>
+    or
+    <button class='underline' hx-get='/item/recipe/add?list_id={{ .Id }}'> + Add Recipe</button>
+</li>
+{{ end }}
+
+{{ define "add_list_item" }}
+<form id="add-list-form" hx-target="this">
+    <label for="name">List Name:</label>
+    <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="name" />
+    <button class="underline" hx-get="/list/{{ . }}" hx-target="body">
+        cancel
+    </button>
+    <button class="underline" hx-post="/list?parent_id={{ . }}" hx-swap="afterend">
+        add
+    </button>
+</form>
+{{ end }}
+
+{{ define "add_recipe_item" }}
+<form id="add-recipe-form" hx-target="this">
+    <label for="name">Recipe Url:</label>
+    <input class="bg-gray-50 ring-1 ring-gray-300 text-gray-900 rounded focus:ring-blue-500" name="url" />
+    <button class="underline" hx-get="/list/{{ . }}" hx-target="body">
+        cancel
+    </button>
+    <button class="underline" hx-post="/recipe?list_id={{ . }}" hx-swap="afterend">
+        add
+    </button>
+</form>
+{{ end }}
+
+{{ define "duplicate_recipe_confirm" }}
+<li class="py-1">Recipe already added to "{{ .List }}". Do you still want to add it?
+    <button class="underline" hx-get="/list/{{ .ListId }}" hx-target="body">
+        cancel
+    </button>
+    <button class="underline" hx-post="/recipe?list_id={{ .ListId }}&ignore_duplicates=true" hx-include="#add-recipe-form" hx-target="closest li" hx-swap="outerHTML">
+        add
     </button>
 </li>
 {{ end }}

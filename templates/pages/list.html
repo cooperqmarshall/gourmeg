@@ -16,6 +16,7 @@
         <hr class="mx-2 py-1" />
         <div class="mx-2 text-lg">
             <ul id="list-children" class="">
+                {{ template "add_item_options" . }}
                 {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
             </ul>
         </div>
@@ -32,16 +33,14 @@
         value="{{ .Name }}" />
     ({{ .Id }})
 </h1>
-<aside class="ml-16">
-    <button class="underline" hx-get="/list/{{ .Id }}" hx-target="body">
+<aside class="mx-2" hx-target="body">
+    <button class="underline" hx-get="/list/{{ .Id }}">
         cancel
     </button>
-
-    <button class="underline" hx-put="/list/{{ .Id }}" hx-target="body">
+    <button class="underline" hx-put="/list/{{ .Id }}" hx-include="closest li">
         confirm
     </button>
-
-    <button class="underline" hx-delete="/list/{{ .Id }}" hx-confirm="Are you sure?" hx-target="body">
+    <button class="underline" hx-delete="/list/{{ .Id }}" hx-confirm="Are you sure?">
         delete
     </button>
 </aside>

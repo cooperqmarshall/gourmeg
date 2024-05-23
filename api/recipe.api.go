@@ -1,10 +1,12 @@
 package api
 
 import (
+	"database/sql"
 	"fmt"
 	"htmx-test/db"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	"github.com/cooperqmarshall/recipe"
@@ -18,44 +20,96 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-    html, err := fetch_recipe_html(r.Url)
-    if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
+	if len(r.Url) == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "url cannot be empty")
+	}
 
-    _, err = extract_recipe_ldjson(html)
-    _ = new(recipe.Recipe)
-    // r.Read_jsonld()
-    if err != nil {
+	ignore_duplicates := c.QueryParam("ignore_duplicates")
+	if ignore_duplicates != "true" {
+		fmt.Printf("%s\n", ignore_duplicates)
+		// check if recipe already added
+		r2, err := db.GetRecipeFromURL(handler.DB, r.Url)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				// no matches found
+			} else {
+                return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("error checking for recipe duplicates: \"%s\"", err))
+			}
+		}
+
+		if r2.Id != 0 {
+			// hacky way of passing current list to html template
+			r2.ListId = r.ListId
+
+			return c.Render(http.StatusOK, "duplicate_recipe_confirm", r2)
+		}
+	}
+
+	html, err := fetch_recipe_html(r.Url)
+	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
+	}
+
+	re, err := extract_recipe_ldjson(html)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Unable to find recipe structure in website \"%s\"", r.Url))
+	}
+
+	r.Name = re.Name
+	r.Ingredients = re.Ingredients
+	r.Instructions = re.Instructions
 
 	err = db.PostRecipe(handler.DB, r)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.Render(http.StatusOK, "add_recipe_result", r)
+	return c.Render(http.StatusOK, "item", db.Item{Id: r.Id, Name: r.Name, Type: "recipe"})
 }
 
-func fetch_recipe_html(url string) (io.Reader, error) {
-    res, err := http.Get(url)
-    if err != nil {
-        return nil, err
-    }
-    return res.Body, nil
+func fetch_recipe_html(u string) (io.Reader, error) {
+	_, err := url.ParseRequestURI(u)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL \"%s\"", u)
+	}
+
+	res, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	return res.Body, nil
 }
 
-func extract_recipe_ldjson(r io.Reader) ([]byte, error) {
-    t := html.NewTokenizer(r)
+func extract_recipe_ldjson(reader io.Reader) (recipe.Recipe, error) {
+	t := html.NewTokenizer(reader)
+	found_ldjson := false
+    var r recipe.Recipe
 
-    for {
-        if t.Next() == html.ErrorToken {
-            return nil, t.Err()
-        }
-        fmt.Printf("%s", t.Token())
-        return nil, nil
-    }
+	for {
+		if t.Next() == html.ErrorToken {
+			return r, t.Err()
+		}
+		token := t.Token()
+
+		if found_ldjson {
+            err := r.Read_jsonld([]byte(token.Data))
+            if err != nil {
+                found_ldjson = false
+            } else if len(r.Ingredients) != 0 || len(r.Instructions) != 0 {
+                return r, nil
+            }
+		}
+
+		if len(token.String()) < 7 || token.String()[1:7] != "script" {
+			continue
+		}
+
+		for _, attr := range token.Attr {
+			if attr.Key == "type" && attr.Val == "application/ld+json" {
+				found_ldjson = true
+			}
+		}
+	}
 }
 
 func (handler Handler) GetRecipe(c echo.Context) error {
@@ -66,6 +120,5 @@ func (handler Handler) GetRecipe(c echo.Context) error {
 	}
 
 	recipe, err := db.GetRecipe(handler.DB, int(id))
-	fmt.Printf("%d, %d", id, recipe.Id)
 	return c.Render(http.StatusOK, "recipe_page", recipe)
 }
