@@ -1,5 +1,3 @@
-github.com/cooperqmarshall/recipe v0.0.0-20240310202445-5343dd7e2cc1 h1:injkR0KNH4lKSWtJ/iWfUgaAHhS6yugervAxNnaD9QY=
-github.com/cooperqmarshall/recipe v0.0.0-20240310202445-5343dd7e2cc1/go.mod h1:9DYS4WLdfXgY71VFZWhS0sdcaKfcV3x6VYFM8CEQtgk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
