@@ -13,9 +13,9 @@
                 ...
             </button>
         </h1>
-        <hr class="ml-14 mr-2 py-1" />
-        <div class="my-2 ml-16 mr-2 text-lg">
-            <ul class="">
+        <hr class="mx-2 py-1" />
+        <div class="mx-2 text-lg">
+            <ul id="list-children" class="">
                 {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
             </ul>
         </div>
