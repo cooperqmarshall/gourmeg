@@ -70,3 +70,13 @@ func (handler Handler) DeleteItem(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+
+func (handler Handler) ItemSearch(c echo.Context) error {
+	search_term := c.FormValue("search_term")
+	search_results, err := db.ItemSearch(handler.DB, search_term)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.Render(http.StatusOK, "list_of_items", search_results)
+}

@@ -48,6 +48,7 @@ func main() {
 	// pages
 	e.GET("/", h.Index)
 	e.GET("/add", h.Add)
+	e.GET("/search", h.Search)
 
 	// recipe
 	e.GET("/recipe/:id", h.GetRecipe)
@@ -64,6 +65,7 @@ func main() {
 	e.PUT("/item/:type/:id", h.PutItem)
 	e.GET("/item/:id/edit", h.EditItem)
 	e.DELETE("/item/:type/:id", h.DeleteItem)
+    e.POST("item/search", h.ItemSearch)
 
 	e.Debug = true
 	e.Logger.Fatal(e.Start(":1323"))

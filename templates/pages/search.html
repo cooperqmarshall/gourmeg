@@ -1,0 +1,24 @@
+{{ define "search" }}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head" }}
+
+<body>
+    {{ template "nav" }}
+    <div class="max-w-screen-md mx-auto">
+        <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
+            <img class="w-14 inline-block pr-2" src="/static/add_recipe.svg" alt="" />
+            <label for="Search">Search:</label>
+            <input
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
+                hx-post="/item/search" hx-trigger="keyup changed delay:500ms" hx-target="#item-search-results"
+                hx-swap="innerHTML" id="list-input" type="text" name="search_term" value="" />
+        </h1>
+        <hr class="ml-14 mr-2" />
+        <div class="my-2 ml-16 mr-2" id="item-search-results">
+        </div>
+    </div>
+</body>
+
+</html>
+{{ end }}

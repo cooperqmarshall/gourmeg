@@ -72,3 +72,32 @@ func DeleteItem(db *sql.DB, i Item) error {
 
 	return nil
 }
+
+type ItemSearchResults = []Item
+
+func ItemSearch(db *sql.DB, search_term string) (ItemSearchResults, error) {
+	var res ItemSearchResults
+
+	rows, err := db.Query(`
+        select id, name, 'recipe' as type
+        from recipe
+        where name ~* $1
+        union all
+        select id, name, 'list' as type
+        from list
+        where name ~* $1
+    `, search_term)
+	if err != nil {
+		return res, err
+	}
+
+	for rows.Next() {
+        var i Item
+		err := rows.Scan(&i.Id, &i.Name, &i.Type)
+		if err != nil {
+			return res, err
+		}
+        res = append(res, i)
+	}
+    return res, nil
+}
