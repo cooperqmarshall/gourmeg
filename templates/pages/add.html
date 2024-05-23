@@ -34,8 +34,14 @@
 </body>
 
 </html>
-{{ end }} {{ define "add_recipe_result" }}
+{{ end }}
+
+{{ define "add_recipe_result" }}
 <a href="/recipe/{{ .Id }}">{{ .Name }}</a>
-{{ end }} {{ define "list_search_results" }} {{ range . }}
+{{ end }}
+
+{{ define "list_search_results" }}
+{{ range . }}
 <div onClick="handelListSearchResultClick(event)">{{ .Name }}</div>
-{{ else }} {{ end }} {{ end }}
+{{ else }} {{ end }}
+{{ end }}
