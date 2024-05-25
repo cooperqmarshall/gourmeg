@@ -10,32 +10,6 @@ type List struct {
 	Children []Item
 }
 
-func GetTopLevelLists(db *sql.DB) ([]Item, error) {
-	var l []Item
-	rows, err := db.Query(`
-        select id, name, 'list'
-        from list
-        where id not in (select child_id 
-                            from link 
-                            where child_type = 'list')
-    `)
-
-	if err != nil {
-		return l, err
-	}
-
-	for rows.Next() {
-		var i Item
-		err = rows.Scan(&i.Id, &i.Name, &i.Type)
-		if err != nil {
-			return l, err
-		}
-		l = append(l, i)
-	}
-
-	return l, nil
-}
-
 func GetList(db *sql.DB, id int) (List, error) {
 	var l List
 	row := db.QueryRow(`SELECT id, name 
@@ -106,7 +80,7 @@ func DeleteList(db *sql.DB, id int) error {
 
 func PostList(db *sql.DB, name string, parent_id int) (Item, error) {
 	var i Item
-    i.Type = "list"
+	i.Type = "list"
 	row := db.QueryRow(`insert into list (name) values ($1) returning id, name`, name)
 
 	err := row.Scan(&i.Id, &i.Name)
@@ -114,7 +88,7 @@ func PostList(db *sql.DB, name string, parent_id int) (Item, error) {
 		return i, err
 	}
 
-    // TODO: add default for parent_id as root list for user
+	// TODO: add default for parent_id as root list for user
 	_, err = db.Exec(`insert into link (parent_id, child_id, child_type) values ($1, $2, 'list')`, parent_id, i.Id)
 	if err != nil {
 		return i, err
