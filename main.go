@@ -10,7 +10,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"htmx-test/api"
+	"gourmeg-htmx/api"
 )
 
 type Templates struct {

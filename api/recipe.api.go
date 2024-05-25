@@ -3,7 +3,7 @@ package api
 import (
 	"database/sql"
 	"fmt"
-	"htmx-test/db"
+	"gourmeg-htmx/db"
 	"io"
 	"net/http"
 	"net/url"

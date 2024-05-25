@@ -1,4 +1,4 @@
-module htmx-test
+module gourmeg-htmx
 
 go 1.20
 
