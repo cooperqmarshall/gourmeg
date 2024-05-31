@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"html/template"
 	"io"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,7 +26,12 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 
-	db, err := sql.Open("postgres", "host=localhost user=root password=secret dbname=gourmeg_2 sslmode=disable")
+    postgres_uri := os.Getenv("POSTGRESQL_URI")
+    if len(postgres_uri) == 0 {
+        postgres_uri =  "host=localhost user=root password=secret dbname=gourmeg_2 sslmode=disable"
+    }
+
+	db, err := sql.Open("postgres", postgres_uri)
 	if err != nil {
 		e.Logger.Fatalf("unable to open database connection: %b", err)
 	}
