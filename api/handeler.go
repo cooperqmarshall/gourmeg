@@ -16,7 +16,7 @@ type (
 )
 
 func (handler Handler) Index(c echo.Context) error {
-    root_list, err := db.GetList(handler.DB, 34) // TODO: get root list id per user
+    root_list, err := db.GetList(handler.DB, 1) // TODO: get root list id per user
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
