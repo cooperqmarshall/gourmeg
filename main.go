@@ -41,7 +41,12 @@ func main() {
 	h := &api.Handler{DB: db}
 	defer db.Close()
 
-	t, err := template.ParseGlob("templates/*/*.html")
+    templates_dir := os.Getenv("TEMPLATES_DIR")
+    if len(templates_dir) == 0 {
+        templates_dir = "templates/*/*.html"
+    }
+
+	t, err := template.ParseGlob(templates_dir)
 	if err != nil {
 		e.Logger.Fatalf("unable to parse templates: %b", err)
 	}
