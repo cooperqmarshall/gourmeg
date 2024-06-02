@@ -21,8 +21,15 @@
                 <label for="list">List:</label>
                 <input
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
-                    hx-post="/list_search" hx-trigger="keyup changed delay:500ms" hx-target="#list-search-results"
+                    hx-post="/list_search" hx-trigger="keyup changed" hx-target="#list-search-results"
                     hx-swap="innerHTML" id="list-input" type="text" name="list" value="" />
+                <script>
+                    function handelListSearchResultClick(e) {
+                      let list = e.srcElement.innerText
+                      document.getElementById('list-input').value = list
+                      console.log(list)
+                    }
+                </script>
                 <div class="my-1" id="list-search-results"></div>
                 <input type="hidden" name="list_id" value="-1" />
                 <button class="text-gray-50 p-1 rounded border border-gray-300 bg-teal-400" type="submit">
