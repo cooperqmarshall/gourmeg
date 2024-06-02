@@ -22,12 +22,13 @@
                 <input
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
                     hx-post="/list_search" hx-trigger="keyup changed" hx-target="#list-search-results"
-                    hx-swap="innerHTML" id="list-input" type="text" name="list" value="" />
+                    hx-swap="innerHTML" id="list-name-input" type="text" name="list" value="" />
+                <input id="list-id-input" type="hidden" name="list_id" value="" />
                 <script>
-                    function handelListSearchResultClick(e) {
-                      let list = e.srcElement.innerText
-                      document.getElementById('list-input').value = list
-                      console.log(list)
+                    function handelListSearchResultClick(e, list_id) {
+                        let list = e.srcElement.innerText
+                        document.getElementById('list-name-input').value = list
+                        document.getElementById('list-id-input').value = list_id
                     }
                 </script>
                 <div class="my-1" id="list-search-results"></div>
@@ -49,6 +50,6 @@
 
 {{ define "list_search_results" }}
 {{ range . }}
-<div onClick="handelListSearchResultClick(event)">{{ .Name }}</div>
+<div onClick="handelListSearchResultClick(event, {{ .Id }})">{{ .Name }}</div>
 {{ else }} {{ end }}
 {{ end }}
