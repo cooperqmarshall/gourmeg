@@ -1,3 +1,9 @@
+// Migrates the date from the original gourmeg to the new
+// gourmeg. This requires a csv with two columns: list_name
+// and url. This script will iterate through each row and add
+// the list if that name has not been added and add the recipe
+// to that list. If another row has the same list name, that
+// recipe will be added to the same list.
 package main
 
 import (
@@ -26,7 +32,7 @@ func main() {
             fmt.Printf("adding new list: %s\n", record[0])
             req_body := bytes.NewBuffer([]byte(fmt.Sprintf("name=%s", record[0])))
 
-            res, err := http.Post("http://localhost:1323/list?parent_id=0", "application/x-www-form-urlencoded", req_body)
+            res, err := http.Post("https://new.gourmeg.org/list?parent_id=1", "application/x-www-form-urlencoded", req_body)
             if err != nil {
 		        panic(err)
             }
@@ -44,9 +50,9 @@ func main() {
 
         // add recipe
         fmt.Printf("Adding recipe (%s) to list %s\n", record[1], lists[record[0]])
-        fmt.Printf("http://localhost:1323/recipe?list_id=%s&ignore_duplicates=true\n", lists[record[0]])
+        fmt.Printf("https://new.gourmeg.org/recipe?list_id=%s&ignore_duplicates=true\n", lists[record[0]])
         req_body := bytes.NewBuffer([]byte(fmt.Sprintf("url=%s", record[1])))
-        res, err := http.Post(fmt.Sprintf("http://localhost:1323/recipe?list_id=%s&ignore_duplicates=true", lists[record[0]]),
+        res, err := http.Post(fmt.Sprintf("https://new.gourmeg.org/recipe?list_id=%s&ignore_duplicates=true", lists[record[0]]),
                                     "application/x-www-form-urlencoded",
                                     req_body)
         if err != nil {
