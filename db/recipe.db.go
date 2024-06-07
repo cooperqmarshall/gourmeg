@@ -29,16 +29,12 @@ func GetRecipe(db *sql.DB, id int) (Recipe, error) {
 }
 
 func PostRecipe(db *sql.DB, r *Recipe) error {
-	row, err := db.Query(`insert into recipe
+	row := db.QueryRow(`insert into recipe
                         (name, url, ingredients, instructions)
                         values ($1, $2, $3, $4)
                         returning id`, r.Name, r.Url, pq.Array(r.Ingredients), pq.Array(r.Instructions))
-	if err != nil {
-		return err
-	}
 
-	row.Next()
-	err = row.Scan(&r.Id)
+    err := row.Scan(&r.Id)
 	if err != nil {
 		return err
 	}

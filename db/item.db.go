@@ -90,6 +90,7 @@ func ItemSearch(db *sql.DB, search_term string) (ItemSearchResults, error) {
 	if err != nil {
 		return res, err
 	}
+    defer rows.Close()
 
 	for rows.Next() {
         var i Item
