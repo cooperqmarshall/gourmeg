@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"os"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -38,6 +39,8 @@ func main() {
 	if err := db.Ping(); err != nil {
 		e.Logger.Fatalf("unable to connect to database %b", err)
 	}
+    db.SetMaxIdleConns(20)
+    db.SetConnMaxLifetime(1000 * time.Millisecond)
 	h := &api.Handler{DB: db}
 	defer db.Close()
 
