@@ -99,11 +99,10 @@ func extract_recipe_ldjson(reader io.Reader) (recipe.Recipe, error) {
 
 		if found_ldjson {
             err := r.Read_jsonld([]byte(token.Data))
-            if err != nil {
-                found_ldjson = false
-            } else if len(r.Ingredients) != 0 || len(r.Instructions) != 0 {
+            if err != nil && (len(r.Ingredients) != 0 || len(r.Instructions) != 0) {
                 return r, nil
             }
+            found_ldjson = false
 		}
 
 		if len(token.String()) < 7 || token.String()[1:7] != "script" {
