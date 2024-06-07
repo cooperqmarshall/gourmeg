@@ -52,10 +52,16 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 
 	re, err := extract_recipe_ldjson(html)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Unable to find recipe structure in website \"%s\"", r.Url))
+        if err.Error() != "EOF" {
+            return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Unable to find recipe structure in website \"%s\"", err))
+        }
 	}
 
-	r.Name = re.Name
+    if re.Name == "" {
+        r.Name = r.Url
+    } else {
+        r.Name = re.Name
+    }
 	r.Ingredients = re.Ingredients
 	r.Instructions = re.Instructions
 
