@@ -18,10 +18,10 @@ type Recipe struct {
 
 func GetRecipe(db *sql.DB, id int) (Recipe, error) {
 	var r Recipe
-	row := db.QueryRow(`select id, name, ingredients, instructions
+	row := db.QueryRow(`select id, name, url, ingredients, instructions
                       from recipe 
                       where id = $1`, id)
-	err := row.Scan(&r.Id, &r.Name, pq.Array(&r.Ingredients), pq.Array(&r.Instructions))
+	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions))
 	if err != nil {
 		return r, err
 	}
