@@ -1,3 +1,3 @@
-[logo](public/assets/cat_chef.png)
+![logo](public/assets/cat_chef.png)
 # Gourmeg
 The online recipe book
