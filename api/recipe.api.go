@@ -130,7 +130,7 @@ func (handler Handler) GetRecipe(c echo.Context) error {
 	id_str := c.Param("id")
 	id, err := strconv.Atoi(id_str)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("id param (%s) not a number", id_str))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
 	}
 
 	recipe, err := db.GetRecipe(handler.DB, int(id))
