@@ -6,10 +6,14 @@
 <body>
     {{ template "nav" }}
     <div class="max-w-screen-md mx-auto">
-        <h1 class="text-3xl my-2 flex items-center">
+        <div class="my-2 flex items-center">
             <img class="w-12 inline-block mx-2" src="/static/cooking.svg" alt="" />
-            <a href="{{ .Url }}" target="_blank">{{ .Name }}</a> ({{ .Id }})
-        </h1>
+            <h1 class="text-3xl flex-grow">
+                <a href="{{ .Url }}" target="_blank">{{ .Name }}</a>
+                ({{ .Id }})
+            </h1>
+            <button class="flex-shrink underline" hx-put="/recipe/refetch/{{ .Id }}" hx-target="body">refetch</button>
+        </div>
         <hr class="mx-2" />
         <div class="mx-2 my-2">
             <h2 class="text-xl">Ingredients:</h2>

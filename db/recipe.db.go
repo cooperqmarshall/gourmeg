@@ -71,3 +71,13 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
 	}
 	return r, nil
 }
+
+func UpdateRecipe(db *sql.DB, r *Recipe) error {
+	_, err := db.Exec("update recipe set name = $1, ingredients = $2, instructions = $3 where id = $4",
+		r.Name, pq.Array(r.Ingredients), pq.Array(r.Instructions), r.Id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

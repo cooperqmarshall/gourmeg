@@ -136,3 +136,25 @@ func (handler Handler) GetRecipe(c echo.Context) error {
 	recipe, err := db.GetRecipe(handler.DB, int(id))
 	return c.Render(http.StatusOK, "recipe_page", recipe)
 }
+
+func (handler Handler) RefetchRecipe(c echo.Context) error {
+	id_str := c.Param("id")
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
+	}
+
+	r, err := db.GetRecipe(handler.DB, int(id))
+
+	err = fetch_recipe(r)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	err = db.UpdateRecipe(handler.DB, r)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Error updating recipe: (%s)", err))
+	}
+
+	return c.Render(http.StatusOK, "recipe_page", r)
+}

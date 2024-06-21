@@ -67,6 +67,7 @@ func main() {
 	// recipe
 	e.GET("/recipe/:id", h.GetRecipe)
 	e.POST("/recipe", h.PostRecipe)
+    e.PUT("/recipe/refetch/:id", h.RefetchRecipe)
 
 	// list
 	e.GET("/list/:id", h.GetList)
