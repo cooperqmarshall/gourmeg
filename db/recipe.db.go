@@ -16,8 +16,8 @@ type Recipe struct {
 	List         string   `form:"list"`
 }
 
-func GetRecipe(db *sql.DB, id int) (Recipe, error) {
-	var r Recipe
+func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
+	r := new(Recipe)
 	row := db.QueryRow(`select id, name, url, ingredients, instructions
                       from recipe 
                       where id = $1`, id)
@@ -34,7 +34,7 @@ func PostRecipe(db *sql.DB, r *Recipe) error {
                         values ($1, $2, $3, $4)
                         returning id`, r.Name, r.Url, pq.Array(r.Ingredients), pq.Array(r.Instructions))
 
-    err := row.Scan(&r.Id)
+	err := row.Scan(&r.Id)
 	if err != nil {
 		return err
 	}
@@ -47,8 +47,8 @@ func PostRecipe(db *sql.DB, r *Recipe) error {
 	return nil
 }
 
-func GetRecipeFromURL(db *sql.DB, url string) (Recipe, error) {
-	var r Recipe
+func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
+	r := new(Recipe)
 	row := db.QueryRow(`select 
                             recipe.id, 
                             recipe.name, 
