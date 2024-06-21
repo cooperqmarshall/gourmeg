@@ -33,7 +33,7 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 			if err == sql.ErrNoRows {
 				// no matches found
 			} else {
-                return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("error checking for recipe duplicates: \"%s\"", err))
+				return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("error checking for recipe duplicates: \"%s\"", err))
 			}
 		}
 
@@ -57,11 +57,11 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		}
 	}
 
-    if re.Name == "" {
-        r.Name = r.Url
-    } else {
-        r.Name = re.Name
-    }
+	if re.Name == "" {
+		r.Name = r.Url
+	} else {
+		r.Name = re.Name
+	}
 	r.Ingredients = re.Ingredients
 	r.Instructions = re.Instructions
 
@@ -89,7 +89,7 @@ func fetch_recipe_html(u string) (io.Reader, error) {
 func extract_recipe_ldjson(reader io.Reader) (recipe.Recipe, error) {
 	t := html.NewTokenizer(reader)
 	found_ldjson := false
-    var r recipe.Recipe
+	var r recipe.Recipe
 
 	for {
 		if t.Next() == html.ErrorToken {
@@ -98,11 +98,11 @@ func extract_recipe_ldjson(reader io.Reader) (recipe.Recipe, error) {
 		token := t.Token()
 
 		if found_ldjson {
-            err := r.Read_jsonld([]byte(token.Data))
-            if err != nil && (len(r.Ingredients) != 0 || len(r.Instructions) != 0) {
-                return r, nil
-            }
-            found_ldjson = false
+			err := r.Read_jsonld([]byte(token.Data))
+			if err != nil && (len(r.Ingredients) != 0 || len(r.Instructions) != 0) {
+				return r, nil
+			}
+			found_ldjson = false
 		}
 
 		if len(token.String()) < 7 || token.String()[1:7] != "script" {
