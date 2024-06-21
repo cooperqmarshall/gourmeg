@@ -13,16 +13,16 @@
         <hr class="mx-2" />
         <div class="mx-2 my-2">
             <h2 class="text-xl">Ingredients:</h2>
-            <ul class="list-disc list-inside">
+            <ul class="list-disc list-inside text-lg">
                 {{ range $i := .Ingredients }}
                 <li>{{ $i }}</li>
                 {{ else }} {{ end }}
             </ul>
             <br />
             <h2 class="text-xl">Instructions:</h2>
-            <ol class="list-decimal list-inside">
+            <ol class="list-decimal list-inside text-lg">
                 {{ range $i := .Instructions }}
-                <li>{{$i}}</li>
+                <li class="py-1">{{$i}}</li>
                 {{ else }} {{ end }}
             </ol>
         </div>
