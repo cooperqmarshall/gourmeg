@@ -45,6 +45,20 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		}
 	}
 
+	err := fetch_recipe(r)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	err = db.PostRecipe(handler.DB, r)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.Render(http.StatusOK, "item", db.Item{Id: r.Id, Name: r.Name, Type: "recipe"})
+}
+
+func fetch_recipe(r *db.Recipe) error {
 	html, err := fetch_recipe_html(r.Url)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -65,12 +79,7 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 	r.Ingredients = re.Ingredients
 	r.Instructions = re.Instructions
 
-	err = db.PostRecipe(handler.DB, r)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	return c.Render(http.StatusOK, "item", db.Item{Id: r.Id, Name: r.Name, Type: "recipe"})
+	return nil
 }
 
 func fetch_recipe_html(u string) (io.Reader, error) {
