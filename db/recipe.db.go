@@ -14,14 +14,16 @@ type Recipe struct {
 	Url          string   `form:"url"`
 	ListId       int      `form:"list_id"`
 	List         string   `form:"list"`
+	ImageUrl     string
+	ThumbnailUrl string
 }
 
 func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
 	r := new(Recipe)
-	row := db.QueryRow(`select id, name, url, ingredients, instructions
+	row := db.QueryRow(`select id, name, url, ingredients, instructions, image_url, thumbnail_url
                       from recipe 
                       where id = $1`, id)
-	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions))
+	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), r.ImageUrl, r.ThumbnailUrl)
 	if err != nil {
 		return r, err
 	}
@@ -30,9 +32,9 @@ func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
 
 func PostRecipe(db *sql.DB, r *Recipe) error {
 	row := db.QueryRow(`insert into recipe
-                        (name, url, ingredients, instructions)
-                        values ($1, $2, $3, $4)
-                        returning id`, r.Name, r.Url, pq.Array(r.Ingredients), pq.Array(r.Instructions))
+                        (name, url, ingredients, instructions, image_url, thumbnail_url)
+                        values ($1, $2, $3, $4, $5, $6)
+                        returning id`, r.Name, r.Url, pq.Array(r.Ingredients), pq.Array(r.Instructions), r.ImageUrl, r.ThumbnailUrl)
 
 	err := row.Scan(&r.Id)
 	if err != nil {
@@ -54,7 +56,9 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
                             recipe.name, 
                             ingredients, 
                             instructions, 
-                            list.name as list
+                            list.name as list,
+                            image_url,
+                            thumbnail_url
                       from recipe 
                       left join link on (recipe.id = child_id and link.child_type = 'recipe')
                       left join list on (parent_id = list.id)
@@ -65,6 +69,8 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
 		pq.Array(&r.Ingredients),
 		pq.Array(&r.Instructions),
 		&r.List,
+		&r.ImageUrl,
+		&r.ThumbnailUrl,
 	)
 	if err != nil {
 		return r, err
@@ -73,8 +79,14 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
 }
 
 func UpdateRecipe(db *sql.DB, r *Recipe) error {
-	_, err := db.Exec("update recipe set name = $1, ingredients = $2, instructions = $3 where id = $4",
-		r.Name, pq.Array(r.Ingredients), pq.Array(r.Instructions), r.Id)
+	_, err := db.Exec(`update recipe set 
+                            name = $2,
+                            ingredients = $3,
+                            instructions = $4,
+                            image_url = $5,
+                            thumbnail_url = $6
+                        where id = $1`,
+		r.Id, r.Name, pq.Array(r.Ingredients), pq.Array(r.Instructions), r.ImageUrl, r.ThumbnailUrl)
 	if err != nil {
 		return err
 	}

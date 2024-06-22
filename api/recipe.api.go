@@ -78,6 +78,8 @@ func fetch_recipe(r *db.Recipe) error {
 	}
 	r.Ingredients = re.Ingredients
 	r.Instructions = re.Instructions
+	r.ImageUrl = re.ImageUrl
+	r.ThumbnailUrl = re.ThumbnailUrl
 
 	return nil
 }

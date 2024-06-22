@@ -3,7 +3,7 @@ module gourmeg-htmx
 go 1.20
 
 require (
-	github.com/cooperqmarshall/recipe v0.0.2
+	github.com/cooperqmarshall/recipe v0.0.3
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/lib/pq v1.10.9
 	golang.org/x/net v0.12.0
