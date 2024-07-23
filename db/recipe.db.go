@@ -23,7 +23,7 @@ func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
 	row := db.QueryRow(`select id, name, url, ingredients, instructions, image_url, thumbnail_url
                       from recipe 
                       where id = $1`, id)
-	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), r.ImageUrl, r.ThumbnailUrl)
+	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), &r.ImageUrl, &r.ThumbnailUrl)
 	if err != nil {
 		return r, err
 	}
