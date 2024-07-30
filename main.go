@@ -20,17 +20,23 @@ type Templates struct {
 }
 
 func (t *Templates) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.templates.ExecuteTemplate(w, name, data)
+	switch name {
+    case "index.html":
+        template.Must(template.ParseFiles("templates/pages/index.html", "templates/pages/_base.html"))
+        return t.templates.ExecuteTemplate(w, "base", data)
+	default:
+		return t.templates.ExecuteTemplate(w, name, data)
+	}
 }
 
 func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 
-    postgres_uri := os.Getenv("POSTGRESQL_URI")
-    if len(postgres_uri) == 0 {
-        postgres_uri =  "host=localhost user=root password=secret dbname=gourmeg_2 sslmode=disable"
-    }
+	postgres_uri := os.Getenv("POSTGRESQL_URI")
+	if len(postgres_uri) == 0 {
+		postgres_uri = "host=localhost user=postgres password=secret dbname=postgres sslmode=disable"
+	}
 
 	db, err := sql.Open("postgres", postgres_uri)
 	if err != nil {
@@ -39,15 +45,15 @@ func main() {
 	if err := db.Ping(); err != nil {
 		e.Logger.Fatalf("unable to connect to database %b", err)
 	}
-    db.SetMaxIdleConns(20)
-    db.SetConnMaxLifetime(1000 * time.Millisecond)
+	db.SetMaxIdleConns(20)
+	db.SetConnMaxLifetime(1000 * time.Millisecond)
 	h := &api.Handler{DB: db}
 	defer db.Close()
 
-    templates_dir := os.Getenv("TEMPLATES_DIR")
-    if len(templates_dir) == 0 {
-        templates_dir = "templates/*/*.html"
-    }
+	templates_dir := os.Getenv("TEMPLATES_DIR")
+	if len(templates_dir) == 0 {
+		templates_dir = "templates/*/*.html"
+	}
 
 	t, err := template.ParseGlob(templates_dir)
 	if err != nil {
@@ -67,7 +73,7 @@ func main() {
 	// recipe
 	e.GET("/recipe/:id", h.GetRecipe)
 	e.POST("/recipe", h.PostRecipe)
-    e.PUT("/recipe/refetch/:id", h.RefetchRecipe)
+	e.PUT("/recipe/refetch/:id", h.RefetchRecipe)
 
 	// list
 	e.GET("/list/:id", h.GetList)
@@ -83,7 +89,7 @@ func main() {
 	e.GET("/item/recipe/add", h.AddRecipeItem)
 	e.GET("/item/list/add", h.AddListItem)
 	e.DELETE("/item/:type/:id", h.DeleteItem)
-    e.POST("item/search", h.ItemSearch)
+	e.POST("item/search", h.ItemSearch)
 
 	e.Debug = true
 	e.Logger.Fatal(e.Start(":1323"))

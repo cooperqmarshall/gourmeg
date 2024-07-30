@@ -20,7 +20,7 @@ func (handler Handler) Index(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
-	return c.Render(http.StatusOK, "home", root_list.Children)
+	return c.Render(http.StatusOK, "index.html", root_list.Children)
 }
 
 func (handler Handler) Add(c echo.Context) error {

@@ -1,16 +1,7 @@
-{{ define "home" }}
-<!DOCTYPE html>
-<html lang="en">
-{{ template "head" }}
-
-<body>
-    {{ template "nav" }}
+{{ define "body" }}
     <div class="max-w-screen-md mx-auto">
         <h1 class="text-3xl ml-16 my-2">Lists ({{ len . }})</h1>
         <hr class="mx-2 mr-2" />
         <div class="mx-2 my-2 text-lg">{{ template "list_of_items" . }}</div>
     </div>
-</body>
-
-</html>
 {{ end }}
