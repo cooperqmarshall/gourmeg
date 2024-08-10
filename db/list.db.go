@@ -32,7 +32,7 @@ func GetList(db *sql.DB, id int) (List, error) {
 	if err != nil {
 		return l, err
 	}
-    defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		var i Item
@@ -55,7 +55,7 @@ func SearchList(db *sql.DB, list string) ([]Item, error) {
 	if err != nil {
 		return items, err
 	}
-    defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		var i Item

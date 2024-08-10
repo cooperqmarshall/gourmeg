@@ -90,15 +90,15 @@ func ItemSearch(db *sql.DB, search_term string) (ItemSearchResults, error) {
 	if err != nil {
 		return res, err
 	}
-    defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
-        var i Item
+		var i Item
 		err := rows.Scan(&i.Id, &i.Name, &i.Type)
 		if err != nil {
 			return res, err
 		}
-        res = append(res, i)
+		res = append(res, i)
 	}
-    return res, nil
+	return res, nil
 }
