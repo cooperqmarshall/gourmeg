@@ -1,11 +1,5 @@
-{{define "list_page"}}
-<!DOCTYPE html>
-<html lang="en">
-{{ template "head" }}
-
-<body>
-    {{ template "nav" }}
-    <div id="list-content" class="max-w-screen-md mx-auto">
+{{ define "body" }}
+    <div id="list-content" class="max-w-screen-md h-screen mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
         <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
             <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
             {{ .Name }} ({{ .Id }})
@@ -22,9 +16,9 @@
         </div>
     </div>
 </body>
-
 </html>
 {{ end }}
+
 
 {{ define "edit_list" }}
 <h1 class="text-3xl mt-2 mx-2 flex flex-wrap items-top items-center">
@@ -33,7 +27,7 @@
         value="{{ .Name }}" />
     ({{ .Id }})
 </h1>
-<aside class="mx-2" hx-target="body">
+<p class="mx-2" hx-target="body">
     <button class="underline" hx-get="/list/{{ .Id }}">
         cancel
     </button>
@@ -43,7 +37,7 @@
     <button class="underline" hx-delete="/list/{{ .Id }}" hx-confirm="Are you sure?">
         delete
     </button>
-</aside>
+</p>
 <div class="mb-2 mx-2 text-lg">
     <ul class="">
         {{ range .Children }}

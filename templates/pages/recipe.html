@@ -1,11 +1,5 @@
-{{define "recipe_page"}}
-<!DOCTYPE html>
-<html lang="en">
-{{ template "head" . }}
-
-<body>
-    {{ template "nav" }}
-    <div class="max-w-screen-md mx-auto">
+{{ define "body" }}
+    <div class="max-w-screen-md h-screen mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
         <div class="mb-2 md:h-72 h-36 bg-cover" style="background-image: url({{ .ImageUrl }});">
             <div class="min-h-full px-2 flex items-end bg-gradient-to-t from-indigo-500">
                 <h1 class="px-2 text-3xl text-gray-700 bg-white rounded-t-md">
@@ -33,7 +27,4 @@
             </ol>
         </div>
     </div>
-</body>
-
-</html>
-{{end}}
+{{ end }}

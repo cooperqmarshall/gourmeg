@@ -21,7 +21,7 @@ func (handler Handler) GetList(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
 
-	return c.Render(http.StatusOK, "list_page", l)
+	return c.Render(http.StatusOK, "list.html", l)
 }
 
 func (handler Handler) GetLists(c echo.Context) error {

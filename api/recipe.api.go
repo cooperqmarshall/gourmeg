@@ -136,7 +136,7 @@ func (handler Handler) GetRecipe(c echo.Context) error {
 	}
 
 	recipe, err := db.GetRecipe(handler.DB, int(id))
-	return c.Render(http.StatusOK, "recipe_page", recipe)
+	return c.Render(http.StatusOK, "recipe.html", recipe)
 }
 
 func (handler Handler) RefetchRecipe(c echo.Context) error {
@@ -158,5 +158,5 @@ func (handler Handler) RefetchRecipe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Error updating recipe: (%s)", err))
 	}
 
-	return c.Render(http.StatusOK, "recipe_page", r)
+	return c.Render(http.StatusOK, "recipe.html", r)
 }

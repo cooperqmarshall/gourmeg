@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"io"
 	"os"
@@ -16,16 +17,20 @@ import (
 )
 
 type Templates struct {
-	templates *template.Template
+	templates []*template.Template
 }
 
 func (t *Templates) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+    fmt.Println(name)
 	switch name {
     case "index.html":
-        template.Must(template.ParseFiles("templates/pages/index.html", "templates/pages/_base.html"))
-        return t.templates.ExecuteTemplate(w, "base", data)
+        return t.templates[1].ExecuteTemplate(w, "base", data)
+    case "list.html":
+        return t.templates[2].ExecuteTemplate(w, "base", data)
+    case "recipe.html":
+        return t.templates[3].ExecuteTemplate(w, "base", data)
 	default:
-		return t.templates.ExecuteTemplate(w, name, data)
+		return t.templates[0].ExecuteTemplate(w, name, data)
 	}
 }
 
@@ -55,11 +60,23 @@ func main() {
 		templates_dir = "templates/*/*.html"
 	}
 
-	t, err := template.ParseGlob(templates_dir)
-	if err != nil {
-		e.Logger.Fatalf("unable to parse templates: %b", err)
-	}
-	e.Renderer = &Templates{templates: t}
+    var templates []*template.Template
+	t := template.Must(template.ParseGlob(templates_dir))
+    templates = append(templates, t)
+
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/index.html", "templates/pages/_base.html"))
+    templates = append(templates, t)
+
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/list.html", "templates/pages/_base.html"))
+    templates = append(templates, t)
+
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/recipe.html", "templates/pages/_base.html"))
+    templates = append(templates, t)
+
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/add.html", "templates/pages/_base.html"))
+    templates = append(templates, t)
+
+	e.Renderer = &Templates{templates: templates}
 
 	e.Static("/css", "public/css")
 	e.Static("/js", "public/js")
