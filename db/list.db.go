@@ -21,9 +21,12 @@ func GetList(db *sql.DB, id int) (List, error) {
 		return l, err
 	}
 
-	rows, err := db.Query(`select coalesce(list.id, recipe.id) as id, 
+	rows, err := db.Query(`select 
+                    coalesce(list.id, recipe.id) as id, 
                     coalesce(list.name, recipe.name) as name,
-                    link.child_type
+                    link.child_type,
+                    coalesce(recipe.domain, ''),
+                    coalesce(recipe.thumbnail_url, '')
                     from link 
                     left join list on link.child_id = list.id and child_type = 'list' 
                     left join recipe on link.child_id = recipe.id and child_type = 'recipe' 
@@ -36,7 +39,7 @@ func GetList(db *sql.DB, id int) (List, error) {
 
 	for rows.Next() {
 		var i Item
-		err = rows.Scan(&i.Id, &i.Name, &i.Type)
+		err = rows.Scan(&i.Id, &i.Name, &i.Type, &i.Domain, &i.ThumbnailUrl)
 		if err != nil {
 			return l, err
 		}

@@ -6,9 +6,11 @@ import (
 )
 
 type Item struct {
-	Id   int    `param:"id"`
-	Name string `query:"name" form:"name"`
-	Type string `query:"type" param:"type"`
+	Id           int    `param:"id"`
+	Name         string `query:"name" form:"name"`
+	Type         string `query:"type" param:"type"`
+	Domain       string
+	ThumbnailUrl string
 }
 
 func GetItem(db *sql.DB, id int, t string) (Item, error) {
