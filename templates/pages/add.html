@@ -23,7 +23,7 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500"
                     hx-post="/list_search" hx-trigger="keyup changed" hx-target="#list-search-results"
                     hx-swap="innerHTML" id="list-name-input" type="text" name="list" value="" />
-                <input id="list-id-input" type="hidden" name="list_id" value="" />
+                <input id="list-id-input" type="hidden" name="list_id" value="1" />
                 <script>
                     function handelListSearchResultClick(e, list_id) {
                         let list = e.srcElement.innerText
