@@ -1,30 +1,28 @@
 {{ define "body" }}
-    <div class="max-w-screen-md h-screen mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
-        <div class="mb-2 md:h-72 h-36 bg-cover" style="background-image: url({{ .ImageUrl }});">
-            <div class="min-h-full px-2 flex items-end bg-gradient-to-t from-indigo-500">
-                <h1 class="px-2 text-3xl text-gray-700 bg-white rounded-t-md">
-                    <a href="{{ .Url }}" target="_blank">{{ .Name }}</a>
-                    ({{ .Id }})
-                </h1>
-                <div class="flex-grow"></div>
-                <button class="flex-shrink underline" hx-put="/recipe/refetch/{{ .Id }}" hx-target="body">refetch</button>
-            </div>
-        </div>
-        <hr class="mx-2" />
-        <div class="mx-2 my-2">
-            <h2 class="text-xl">Ingredients:</h2>
-            <ul class="list-disc list-inside text-lg">
-                {{ range $i := .Ingredients }}
-                <li>{{ $i }}</li>
-                {{ else }} {{ end }}
-            </ul>
-            <br />
-            <h2 class="text-xl">Instructions:</h2>
-            <ol class="list-decimal list-inside text-lg">
-                {{ range $i := .Instructions }}
-                <li class="py-1">{{$i}}</li>
-                {{ else }} {{ end }}
-            </ol>
-        </div>
+<div class="mb-2 md:h-72 h-36 bg-cover" style="background-image: url({{ .ImageUrl }});">
+    <div class="min-h-full px-2 flex items-end bg-gradient-to-t from-indigo-500">
+        <h1 class="px-2 text-3xl text-gray-700 bg-white rounded-t-md">
+            <a href="{{ .Url }}" target="_blank">{{ .Name }}</a>
+            ({{ .Id }})
+        </h1>
+        <div class="flex-grow"></div>
+        <button class="flex-shrink underline" hx-put="/recipe/refetch/{{ .Id }}" hx-target="body">refetch</button>
     </div>
+</div>
+<hr class="mx-2" />
+<div class="mx-2 my-2">
+    <h2 class="text-xl">Ingredients:</h2>
+    <ul class="list-disc list-inside text-lg">
+        {{ range $i := .Ingredients }}
+        <li>{{ $i }}</li>
+        {{ else }} {{ end }}
+    </ul>
+    <br />
+    <h2 class="text-xl">Instructions:</h2>
+    <ol class="list-decimal list-inside text-lg">
+        {{ range $i := .Instructions }}
+        <li class="py-1">{{$i}}</li>
+        {{ else }} {{ end }}
+    </ol>
+</div>
 {{ end }}

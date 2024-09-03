@@ -1,15 +1,28 @@
 {{ define "list_of_items" }}
-<ul class="">
-    {{ range . }} {{ template "item" . }} {{ else }} {{ end }}
+<ul id="list-children" class="flex flex-col gap-2">
+    {{ template "add_item_options" . }}
+    {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
 </ul>
 {{ end }}
 
 {{ define "item" }}
-<li class="py-1" hx-target="this" hx-swap="outerHTML">
-    <a class="underline" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> ({{ .Type }})
-    <button class="underline" hx-get="/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}">
-        ...
-    </button>
+<li class="w-full bg-white rounded-md flex shadow" hx-target="this" hx-swap="outerHTML">
+    <img class="w-40 object-cover rounded-md" src="{{ .ThumbnailUrl }}">
+    <div class="bg-jordy-blue w-1"></div>
+    <div class="p-1 flex-grow">
+        <div class="flex gap-1">
+            <div class="flex-grow">
+                <a class="underline" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a> 
+                <p>({{ .Domain }})</p>
+            </div>
+            <button class="underline" hx-get="/item/{{ .Id }}/edit?name={{ .Name }}&type={{ .Type }}">
+                edit
+            </button>
+        </div>
+        <div class="flex">
+            <a class="underline" href="/{{ .Type }}/{{ .Id }}">unloved</a> 
+        </div>
+    </div>
 </li>
 {{ end }}
 

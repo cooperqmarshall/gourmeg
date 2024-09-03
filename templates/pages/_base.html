@@ -4,8 +4,10 @@
 {{ template "head" }}
 
 {{ template "nav" . }}
-<body class="text-gray-900 bg-mauve-300">
-    {{ template "body" . }}
+<body class="text-gray-900 bg-mauve-300 min-h-screen">
+    <div class="max-w-screen-md mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
+        {{ template "body" . }}
+    </div>
 </body>
 
 </html>

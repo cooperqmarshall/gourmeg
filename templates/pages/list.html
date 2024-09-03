@@ -1,22 +1,17 @@
 {{ define "body" }}
-    <div id="list-content" class="max-w-screen-md h-screen mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
-        <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
-            <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
-            {{ .Name }} ({{ .Id }})
-            <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#list-content">
-                ...
-            </button>
-        </h1>
-        <hr class="mx-2 py-1" />
-        <div class="mx-2 text-lg">
-            <ul id="list-children" class="">
-                {{ template "add_item_options" . }}
-                {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
-            </ul>
-        </div>
+<div id="list-content">
+    <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
+        <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
+        {{ .Name }} ({{ .Id }})
+        <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#list-content">
+            ...
+        </button>
+    </h1>
+    <hr class="mx-2 py-1" />
+    <div class="mx-2 text-lg">
+        {{ template "list_of_items" . }}
     </div>
-</body>
-</html>
+</div>
 {{ end }}
 
 

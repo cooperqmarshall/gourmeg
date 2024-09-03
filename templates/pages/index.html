@@ -1,7 +1,5 @@
 {{ define "body" }}
-    <div class="max-w-screen-md h-screen mx-auto bg-mauve-100 border-r-8 border-l-8 border-mauve-200">
-        <h1 class="text-3xl ml-16 py-2">Lists ({{ len . }})</h1>
-        <hr class="mx-2 mr-2" />
-        <div class="mx-2 my-2 text-lg">{{ template "list_of_items" . }}</div>
-    </div>
+<h1 class="text-3xl ml-16 py-2">Lists ({{ len .Children }})</h1>
+<hr class="mx-2 mr-2" />
+<div class="mx-2 my-2 text-lg">{{ template "list_of_items" . }}</div>
 {{ end }}
