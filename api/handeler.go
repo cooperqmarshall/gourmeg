@@ -24,5 +24,5 @@ func (handler Handler) Index(c echo.Context) error {
 }
 
 func (handler Handler) Add(c echo.Context) error {
-	return c.Render(http.StatusOK, "add", nil)
+	return c.Render(http.StatusOK, "add.html", nil)
 }

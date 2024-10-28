@@ -29,6 +29,8 @@ func (t *Templates) Render(w io.Writer, name string, data interface{}, c echo.Co
         return t.templates[2].ExecuteTemplate(w, "base", data)
     case "recipe.html":
         return t.templates[3].ExecuteTemplate(w, "base", data)
+    case "add.html":
+        return t.templates[4].ExecuteTemplate(w, "base", data)
     case "search.html":
         return t.templates[5].ExecuteTemplate(w, "base", data)
 	default:
