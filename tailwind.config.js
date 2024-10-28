@@ -11,7 +11,7 @@ module.exports = {
         "indigo": colors.indigo,
         "gray": colors.gray,
         "turquoise": "#2dd4bf",
-        "jordy-blue": "#93c5fd",
+        "jordy-blue": "#93dcfd",
         "mauve": {100: "#d9c2f2", 200: "#d8b4fe", 300: "#c29de9"},
         "carnation-pink": "#fe99cf",
         "seasalt": "#fafafa",
