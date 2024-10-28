@@ -7,5 +7,5 @@ import (
 )
 
 func (handler Handler) Search(c echo.Context) error {
-    return c.Render(http.StatusOK, "search", nil)
+    return c.Render(http.StatusOK, "search.html", nil)
 }

@@ -29,6 +29,8 @@ func (t *Templates) Render(w io.Writer, name string, data interface{}, c echo.Co
         return t.templates[2].ExecuteTemplate(w, "base", data)
     case "recipe.html":
         return t.templates[3].ExecuteTemplate(w, "base", data)
+    case "search.html":
+        return t.templates[5].ExecuteTemplate(w, "base", data)
 	default:
 		return t.templates[0].ExecuteTemplate(w, name, data)
 	}
@@ -74,6 +76,9 @@ func main() {
     templates = append(templates, t)
 
     t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/add.html", "templates/pages/_base.html"))
+    templates = append(templates, t)
+
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/search.html", "templates/pages/_base.html"))
     templates = append(templates, t)
 
 	e.Renderer = &Templates{templates: templates}
