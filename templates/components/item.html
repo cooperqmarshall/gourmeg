@@ -1,7 +1,6 @@
 {{ define "list_of_items" }}
-<ul id="list-children" class="flex flex-col gap-2">
-    {{ template "add_item_options" . }}
-    {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
+<ul id="list-children" class="flex flex-wrap justify-evenly">
+    {{ range . }} {{ template "item" . }} {{ else }} {{ end }}
 </ul>
 {{ end }}
 
@@ -40,7 +39,7 @@
 {{ end }}
 
 {{ define "add_item_options" }}
-<li hx-target="this" hx-swap="outerHTML">
+<li class="w-full" hx-target="this" hx-swap="outerHTML">
     <button class='underline' hx-get='/item/list/add?parent_id={{ .Id }}'> + Add List</button>
     or
     <button class='underline' hx-get='/item/recipe/add?list_id={{ .Id }}'> + Add Recipe</button>
