@@ -1,6 +1,6 @@
 {{ define "body" }}
 <div id="list-content">
-    <h1 class="text-3xl my-2 mx-2 flex items-top items-center">
+    <h1 class="text-3xl py-2 mx-2 flex items-top items-center">
         <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
         {{ .Name }} ({{ .Id }})
         <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#list-content">
