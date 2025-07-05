@@ -1,8 +1,8 @@
 postgres:
-	docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=secret -e POSTGRES_USER=root -d postgres:alpine
+	docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=secret -e POSTGRES_USER=postgres -d postgres:alpine
 
 createdb:
-	docker exec -it postgres createdb --username=root --owner=root gourmegdb
+	docker exec -it postgres createdb --username=postgres --owner=postgres gourmegdb
 
 dropdb:
 	docker exec -it postgres dropdb gourmegdb

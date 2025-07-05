@@ -44,7 +44,7 @@ func main() {
 
 	postgres_uri := os.Getenv("POSTGRESQL_URI")
 	if len(postgres_uri) == 0 {
-		postgres_uri = "host=localhost user=postgres password=secret dbname=postgres sslmode=disable"
+		postgres_uri = "host=localhost user=postgres password=secret dbname=gourmegdb sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", postgres_uri)
