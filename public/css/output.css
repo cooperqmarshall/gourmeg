@@ -630,10 +630,6 @@ video {
   min-height: 100vh;
 }
 
-.min-h-0 {
-  min-height: 0px;
-}
-
 .w-14 {
   width: 3.5rem;
 }
