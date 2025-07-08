@@ -5,7 +5,7 @@ createdb:
 	docker exec -it postgres createdb --username=postgres --owner=postgres gourmegdb
 
 dropdb:
-	docker exec -it postgres dropdb gourmegdb
+	docker exec -it postgres dropdb -U postgres gourmegdb
 
 tailwind:
 	tailwindcss -i public/css/styles.css -o public/css/output.css --watch
