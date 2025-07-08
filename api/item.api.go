@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"gourmeg-htmx/db"
+	"gourmeg/db"
 	"net/http"
 	"strconv"
 

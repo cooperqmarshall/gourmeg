@@ -13,7 +13,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"gourmeg-htmx/api"
+	"gourmeg/api"
 )
 
 type Templates struct {
