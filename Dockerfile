@@ -5,8 +5,11 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+# Statically build Linux binary
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV GOARCH=amd64
 RUN go build -o server .
-RUN file server
 
 # Stage 2: Run the app in a minimal image
 FROM alpine:latest
@@ -19,4 +22,3 @@ COPY --from=builder /app/server .
 
 EXPOSE 1323
 
-CMD ["./server"]
