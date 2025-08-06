@@ -7,6 +7,11 @@ createdb:
 dropdb:
 	docker exec -it postgres dropdb -U postgres gourmegdb
 
+migrateup:
+	for file in migrations/*.sql; do \
+		cat $$file | docker exec -i postgres psql -U postgres -d gourmegdb; \
+	done
+
 tailwind:
 	tailwindcss -i public/css/styles.css -o public/css/output.css --watch
 
