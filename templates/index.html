@@ -8,7 +8,11 @@
             or
             <button class='underline' hx-get='/item/recipe/add?list_id={{ .Id }}'> + Add Recipe</button>
         </li>
-        {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
+        {{ range .Children }}
+        {{ template "item" . }}
+        {{ else }}
+        <li class="w-full text-center text-gray-600">No list or recipes yet.</li>
+        {{ end }}
     </ul>
 </div>
 
