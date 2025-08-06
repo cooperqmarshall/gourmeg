@@ -113,7 +113,7 @@ func main() {
 	e.GET("/item/recipe/add", h.AddRecipeItem)
 	e.GET("/item/list/add", h.AddListItem)
 	e.DELETE("/item/:type/:id", h.DeleteItem)
-	e.POST("item/search", h.ItemSearch)
+	e.POST("/item/search", h.ItemSearch)
 
 	e.Debug = true
 	e.Logger.Fatal(e.Start(":1323"))
