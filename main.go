@@ -61,26 +61,26 @@ func main() {
 
 	templates_dir := os.Getenv("TEMPLATES_DIR")
 	if len(templates_dir) == 0 {
-		templates_dir = "templates/*/*.html"
+		templates_dir = "templates/*.html"
 	}
 
     var templates []*template.Template
 	t := template.Must(template.ParseGlob(templates_dir))
     templates = append(templates, t)
 
-    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/index.html", "templates/pages/_base.html"))
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/index.html", "templates/_base.html"))
     templates = append(templates, t)
 
-    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/list.html", "templates/pages/_base.html"))
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/list.html", "templates/_base.html"))
     templates = append(templates, t)
 
-    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/recipe.html", "templates/pages/_base.html"))
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/recipe.html", "templates/_base.html"))
     templates = append(templates, t)
 
-    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/add.html", "templates/pages/_base.html"))
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/add.html", "templates/_base.html"))
     templates = append(templates, t)
 
-    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/pages/search.html", "templates/pages/_base.html"))
+    t = template.Must(template.Must(t.Clone()).ParseFiles("templates/search.html", "templates/_base.html"))
     templates = append(templates, t)
 
 	e.Renderer = &Templates{templates: templates}
