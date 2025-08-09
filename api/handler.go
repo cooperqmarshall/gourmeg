@@ -16,13 +16,9 @@ type (
 )
 
 func (handler Handler) Index(c echo.Context) error {
-	root_list, err := db.GetList(handler.DB, 1) // TODO: get root list id per user
+	root_list, err := db.GetList(handler.DB, 0) // TODO: get root list id per user
 	if err != nil {
-		if err == sql.ErrNoRows {
-			// no matches found
-		} else {
-			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
-		}
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
 	return c.Render(http.StatusOK, "index.html", root_list)
 }

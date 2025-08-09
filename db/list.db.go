@@ -18,7 +18,11 @@ func GetList(db *sql.DB, id int) (List, error) {
 
 	err := row.Scan(&l.Id, &l.Name)
 	if err != nil {
-		return l, err
+		if err == sql.ErrNoRows {
+			// no matches found
+		} else {
+			return l, err
+		}
 	}
 
 	rows, err := db.Query(`select 
