@@ -3,11 +3,7 @@
 <hr class="mx-2 mr-2" />
 <div class="mx-2 my-2 text-lg">
     <ul id="list-children" class="flex flex-wrap justify-evenly">
-        <li class="w-full" hx-target="this" hx-swap="outerHTML">
-            <button class='underline' hx-get='/item/list/add?parent_id={{ .Id }}'> + Add List</button>
-            or
-            <button class='underline' hx-get='/item/recipe/add?list_id={{ .Id }}'> + Add Recipe</button>
-        </li>
+        {{ template "add_item_options" .Id }}
         {{ range .Children }}
         {{ template "item" . }}
         {{ else }}

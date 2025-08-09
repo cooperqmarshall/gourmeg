@@ -92,5 +92,7 @@ func (handler Handler) PostList(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%b", err))
 	}
 
-	return c.Render(http.StatusOK, "item", item)
+	item.ParentId = parent_id
+
+	return c.Render(http.StatusOK, "add_item_options_and_item", item)
 }

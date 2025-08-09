@@ -102,3 +102,14 @@ func (handler Handler) ItemSearch(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "list_of_items", search_results)
 }
+
+func (handler Handler) AddItemOptions(c echo.Context) error {
+	id_str := c.QueryParam("id")
+
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("list_id param (%s) not a number", id_str))
+	}
+	
+	return c.Render(http.StatusOK, "add_item_options", id)
+}

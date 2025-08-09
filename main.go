@@ -114,6 +114,7 @@ func main() {
 	e.GET("/item/list/add", h.AddListItem)
 	e.DELETE("/item/:type/:id", h.DeleteItem)
 	e.POST("/item/search", h.ItemSearch)
+	e.GET("/item/add_item_options", h.AddItemOptions)
 
 	e.Debug = true
 	e.Logger.Fatal(e.Start(":1323"))
