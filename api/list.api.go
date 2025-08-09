@@ -15,10 +15,13 @@ func (handler Handler) GetList(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("id param (%s) not a number", id_str))
 	}
+	if id <= 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("invalid id: (%d)", id))
+	}
 
 	l, err := db.GetList(handler.DB, int(id))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Sprintf("%b", err))
 	}
 
 	return c.Render(http.StatusOK, "list.html", l)
@@ -77,11 +80,11 @@ func (handler Handler) PostList(c echo.Context) error {
 
 	name := c.FormValue("name")
 	if len(name) == 0 {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprint("list name cannot be empty"))
+		return echo.NewHTTPError(http.StatusBadRequest, "list name cannot be empty")
 	}
 
 	if len(name) > 512 {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprint("list name cannot be longer than 512 characters"))
+		return echo.NewHTTPError(http.StatusBadRequest, "list name cannot be longer than 512 characters")
 	}
 
 	item, err := db.PostList(handler.DB, name, parent_id)
