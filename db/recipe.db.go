@@ -54,6 +54,7 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
 	row := db.QueryRow(`select 
                             recipe.id, 
                             recipe.name, 
+							url,
                             ingredients, 
                             instructions, 
                             list.name as list,
@@ -66,6 +67,7 @@ func GetRecipeFromURL(db *sql.DB, url string) (*Recipe, error) {
 	err := row.Scan(
 		&r.Id,
 		&r.Name,
+		&r.Url,
 		pq.Array(&r.Ingredients),
 		pq.Array(&r.Instructions),
 		&r.List,
