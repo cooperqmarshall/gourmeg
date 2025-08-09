@@ -18,21 +18,24 @@ import (
 
 func main() {
 	file, err := os.Open("data.csv")
-	defer file.Close()
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
+
 	csv_reader := csv.NewReader(file)
 	records, err := csv_reader.ReadAll()
 
     lists := make(map[string]string)
 
-    for _, record := range records {
-        if lists[record[0]] == "" {
+    for i, record := range records {
+		if i == 0 {
+			continue
+		}
+		if val, ok := lists[record[0]]; val == "" || !ok {
             fmt.Printf("adding new list: %s\n", record[0])
-            req_body := bytes.NewBuffer([]byte(fmt.Sprintf("name=%s", record[0])))
-
-            res, err := http.Post("https://new.gourmeg.org/list?parent_id=1", "application/x-www-form-urlencoded", req_body)
+            req_body := bytes.NewBuffer([]byte(fmt.Appendf([]byte("name="), record[0])))
+            res, err := http.Post("https://gourmeg.org/list?parent_id=0", "application/x-www-form-urlencoded", req_body)
             if err != nil {
 		        panic(err)
             }
@@ -50,9 +53,9 @@ func main() {
 
         // add recipe
         fmt.Printf("Adding recipe (%s) to list %s\n", record[1], lists[record[0]])
-        fmt.Printf("https://new.gourmeg.org/recipe?list_id=%s&ignore_duplicates=true\n", lists[record[0]])
-        req_body := bytes.NewBuffer([]byte(fmt.Sprintf("url=%s", record[1])))
-        res, err := http.Post(fmt.Sprintf("https://new.gourmeg.org/recipe?list_id=%s&ignore_duplicates=true", lists[record[0]]),
+        fmt.Printf("https://gourmeg.org/recipe?list_id=%s&ignore_duplicates=true\n", lists[record[0]])
+        req_body := bytes.NewBuffer([]byte(fmt.Appendf([]byte("url="), record[1])))
+        res, err := http.Post(fmt.Sprintf("https://gourmeg.org/recipe?list_id=%s&ignore_duplicates=true", lists[record[0]]),
                                     "application/x-www-form-urlencoded",
                                     req_body)
         if err != nil {
