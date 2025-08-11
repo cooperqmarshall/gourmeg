@@ -13,7 +13,11 @@
     <div class="p-1 flex gap-1">
         <div class="flex-grow w-full truncate">
             <a class="truncate" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a>
-            <p class="text-gray-700 truncate">{{ if .Domain }}{{ .Domain }}{{ else }} domain {{ end }}</p>
+            <p class="text-gray-700 truncate">
+                {{ if eq .Type "list" }} List
+                {{ else if .Domain }}{{ .Domain }}
+                {{ else }} Domain {{ end }}
+            </p>
         </div>
         <button class="underline" hx-get="/item/{{ .Id }}/edit?name={{ urlquery .Name }}&type={{ urlquery .Type }}">
             edit
