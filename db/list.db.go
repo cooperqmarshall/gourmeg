@@ -2,6 +2,8 @@ package db
 
 import (
 	"database/sql"
+
+	"github.com/lib/pq"
 )
 
 type List struct {
@@ -30,7 +32,14 @@ func GetList(db *sql.DB, id int) (List, error) {
                     coalesce(list.name, recipe.name) as name,
                     link.child_type,
                     coalesce(recipe.domain, ''),
-                    coalesce(recipe.thumbnail_url, '')
+                    coalesce(recipe.thumbnail_url, ''),
+					(
+						select array_agg(parent_id) 
+						from link l 
+						where 
+							l.child_id = coalesce(list.id, recipe.id) 
+							and l.child_type = link.child_type
+					)
                     from link 
                     left join list on link.child_id = list.id and child_type = 'list' 
                     left join recipe on link.child_id = recipe.id and child_type = 'recipe' 
@@ -42,12 +51,21 @@ func GetList(db *sql.DB, id int) (List, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var i Item
-		err = rows.Scan(&i.Id, &i.Name, &i.Type, &i.Domain, &i.ThumbnailUrl)
+		var item Item
+		var list_ids []int64
+		err = rows.Scan(&item.Id,
+			&item.Name,
+			&item.Type,
+			&item.Domain,
+			&item.ThumbnailUrl,
+			pq.Array(&list_ids))
 		if err != nil {
 			return l, err
 		}
-		l.Children = append(l.Children, i)
+		for _, b := range list_ids {
+			item.ListIds = append(item.ListIds, int(b))
+		}
+		l.Children = append(l.Children, item)
 	}
 
 	return l, nil

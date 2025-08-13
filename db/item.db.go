@@ -12,7 +12,7 @@ type Item struct {
 	Domain       string
 	ImageUrl     string
 	ThumbnailUrl string
-	ParentId     int
+	ListIds      []int
 }
 
 func GetItem(db *sql.DB, id int, t string) (Item, error) {

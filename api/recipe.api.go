@@ -55,7 +55,20 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.Render(http.StatusOK, "add_item_options_and_item", db.Item{Id: r.Id, Name: r.Name, Type: "recipe", ParentId: r.ListId})
+	item := db.Item{
+		Id:           r.Id,
+		Name:         r.Name,
+		Type:         "recipe",
+		ThumbnailUrl: r.ThumbnailUrl,
+		ListIds:      []int{r.ListId},
+	}
+
+	l := db.List{
+		Id:       r.ListId,
+		Children: []db.Item{item},
+	}
+
+	return c.Render(http.StatusOK, "add_item_options_and_items", l)
 }
 
 func fetch_recipe(r *db.Recipe) error {

@@ -50,9 +50,9 @@
 </li>
 {{ end }}
 
-{{ define "add_item_options_and_item" }}
-{{ template "add_item_options" .ParentId }}
-{{ template "item" . }}
+{{ define "add_item_options_and_items" }}
+    {{ template "add_item_options" .Id }}
+    {{ range .Children }} {{ template "item" . }} {{ else }} {{ end }}
 {{ end }}
 
 {{ define "add_list_item" }}
