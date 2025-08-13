@@ -16,14 +16,23 @@ type Recipe struct {
 	List         string   `form:"list"`
 	ImageUrl     string
 	ThumbnailUrl string
+	ListIds      []int
 }
 
 func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
 	r := new(Recipe)
-	row := db.QueryRow(`select id, name, url, ingredients, instructions, image_url, thumbnail_url
-                      from recipe 
+	row := db.QueryRow(`select 
+						 id,
+						 name,
+						 url,
+						 ingredients,
+						 instructions,
+						 image_url,
+						 thumbnail_url,
+						 (select array_agg(parent_id) from link where id = child_id and child_type = 'recipe')
+                      from recipe
                       where id = $1`, id)
-	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), &r.ImageUrl, &r.ThumbnailUrl)
+	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), &r.ImageUrl, &r.ThumbnailUrl, &r.ListIds)
 	if err != nil {
 		return r, err
 	}
