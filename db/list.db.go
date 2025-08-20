@@ -44,7 +44,7 @@ func GetList(db *sql.DB, id int) (List, error) {
                     left join list on link.child_id = list.id and child_type = 'list' 
                     left join recipe on link.child_id = recipe.id and child_type = 'recipe' 
                     where parent_id = $1
-                    order by child_type, id desc`, id)
+                    order by coalesce(list.created_at, recipe.created_at) desc`, id)
 	if err != nil {
 		return l, err
 	}
