@@ -10,7 +10,6 @@ type Item struct {
 	Name         string `query:"name" form:"name"`
 	Type         string `query:"type" param:"type"`
 	Domain       string
-	ImageUrl     string
 	ThumbnailUrl string
 	ListIds      []int
 }
@@ -83,7 +82,7 @@ func ItemSearch(db *sql.DB, search_term string) (ItemSearchResults, error) {
 	var res ItemSearchResults
 
 	rows, err := db.Query(`
-        select id, name, 'recipe' as type, image_url, thumbnail_url
+        select id, name, 'recipe' as type, thumbnail_url
         from recipe
         where name ~* $1
         union all
@@ -98,7 +97,7 @@ func ItemSearch(db *sql.DB, search_term string) (ItemSearchResults, error) {
 
 	for rows.Next() {
 		var i Item
-		err := rows.Scan(&i.Id, &i.Name, &i.Type, &i.ImageUrl, &i.ThumbnailUrl)
+		err := rows.Scan(&i.Id, &i.Name, &i.Type, &i.ThumbnailUrl)
 		if err != nil {
 			return res, err
 		}
