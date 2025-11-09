@@ -10,16 +10,16 @@
         <img class="w-full h-48 object-cover border-l-4 border-turquoise" src="{{ .ThumbnailUrl }}">
     </a>
     <div class="bg-jordy-blue h-1"></div>
-    <div class="p-1 flex gap-1">
-        <div class="flex-grow w-full truncate">
-            <a class="truncate" href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a>
-            <p class="text-gray-700 truncate">
+    <div class="px-2 py-1 flex gap-1">
+        <div class="grow w-full truncate">
+            <a href="/{{ .Type }}/{{ .Id }}">{{ .Name }}</a>
+            <p class="text-sm text-gray-700">
                 {{ if eq .Type "list" }} List
                 {{ else if .Domain }}{{ .Domain }}
                 {{ else }} Domain {{ end }}
             </p>
         </div>
-        <button class="underline" hx-get="/item/{{ .Id }}/edit?name={{ urlquery .Name }}&type={{ urlquery .Type }}">
+        <button class="text-sm underline" hx-get="/item/{{ .Id }}/edit?name={{ urlquery .Name }}&type={{ urlquery .Type }}">
             edit
         </button>
     </div>
@@ -87,5 +87,26 @@
         hx-include="#add-recipe-form">
         add
     </button>
+</li>
+{{ end }}
+
+{{ define "list_item" }}
+<li class="my-1 sm:my-2 w-full sm:w-5/12 max-w-sm bg-white drop-shadow-sm shadow-sm" hx-target="this" hx-swap="outerHTML">
+    <a href="/list/{{ .Id }}" class="block p-3">
+        <div class="flex justify-between items-start">
+            <div class="grow w-full truncate">
+                <h3 class="font-semibold truncate">{{ .Name }}</h3>
+                <p class="text-gray-700 text-sm truncate">
+                    {{ if .Lists }}{{ len .Lists }} items{{ else }}Empty list{{ end }}
+                </p>
+            </div>
+            <button 
+                class="underline text-sm" 
+                hx-get="/item/{{ .Id }}/edit?name={{ urlquery .Name }}&type=list">
+                edit
+            </button>
+        </div>
+    </a>
+    <div class="bg-turquoise h-1"></div>
 </li>
 {{ end }}
