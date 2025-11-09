@@ -123,3 +123,49 @@ func PostList(db *sql.DB, name string, parent_id int) (Item, error) {
 
 	return i, nil
 }
+
+type ListTree struct {
+	Id      int
+	Name    string
+	Lists   []*ListTree
+	Recipes []*Recipe
+}
+
+func GetListTree(db *sql.DB, list *ListTree) error {
+	rows, err := db.Query(`select child_id, name, child_type
+                        from link 
+						left join list on (link.child_id = list.id)
+						where parent_id=$1`, list.Id)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var name sql.NullString
+		var child_type string
+		err = rows.Scan(&id, &name, &child_type)
+		if err != nil {
+			return err
+		}
+
+		if child_type == "list" {
+			l := ListTree{
+				Id:   id,
+				Name: name.String,
+			}
+			list.Lists = append(list.Lists, &l)
+			err = GetListTree(db, &l)
+			if err != nil {
+				return err
+			}
+
+		} else if child_type == "recipe" {
+			r := Recipe{Id: id}
+			list.Recipes = append(list.Recipes, &r)
+		}
+	}
+
+	return nil
+}

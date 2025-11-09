@@ -1,15 +1,41 @@
 {{ define "body" }}
-<h1 class="text-3xl ml-16 py-2">Lists ({{ len .Children }})</h1>
-<hr class="mx-2 mr-2" />
-<div class="mx-2 my-2 text-lg">
-    <ul id="list-children" class="flex flex-wrap justify-evenly">
-        {{ template "add_item_options" .Id }}
-        {{ range .Children }}
-        {{ template "item" . }}
+<div class="bg-gray-50 text-gray-800 font-sans shadow-lg rounded-lg p-3 md:p-8 mx-3">
+    <h1 class="text-3xl font-bold border-b pb-2 mb-4 md:pb-4 md:mb-6 text-center">What's Cookin'?</h1>
+    <ul class="space-y-4">
+        {{ range .Lists }}
+        <li>
+            <a href="/list/{{ .Id }}" class="flex justify-between font-semibold items-center">
+                {{ .Name }}
+                <span class="h-2 mx-1 border-b-2 border-dotted border-gray-300 grow"></span>
+                <span class="text-gray-500">{{ len .Recipes }}</span>
+            </a>
+            {{ if .Lists }}
+            {{ template "tree" . }}
+            {{ end }}
+        </li>
         {{ else }}
-        <li class="w-full text-center text-gray-600">No list or recipes yet.</li>
+        <div class="w-full text-center text-gray-600">No list or recipes yet.</div>
         {{ end }}
     </ul>
 </div>
-
 {{ end }}
+
+{{ define "tree" }}
+<ul class="ml-1 pt-2 pl-3 mb-3 border-l space-y-1 text-gray-700">
+    {{ range .Lists }}
+    <li>
+        <a href="/list/{{ .Id }}" class="flex justify-between items-center">
+            {{ .Name }}
+            <span class="h-2 mx-1 border-b-2 border-dotted border-gray-300 grow"></span>
+            <span class="text-gray-500">{{ len .Recipes }}</span>
+        </a>
+        {{ if .Lists }}
+        {{ template "tree" . }}
+        {{ end }}
+    </li>
+    {{ end }}
+</ul>
+{{ end }}
+
+</div>
+</body>

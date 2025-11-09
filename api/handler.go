@@ -16,11 +16,12 @@ type (
 )
 
 func (handler Handler) Index(c echo.Context) error {
-	root_list, err := db.GetList(handler.DB, 0) // TODO: get root list id per user
+	l := db.ListTree{Id:0}
+	err := db.GetListTree(handler.DB, &l) // TODO: get root list id per user
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
-	return c.Render(http.StatusOK, "index.html", root_list)
+	return c.Render(http.StatusOK, "index.html", l)
 }
 
 func (handler Handler) Add(c echo.Context) error {
