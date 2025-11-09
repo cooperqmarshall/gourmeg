@@ -26,7 +26,6 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 
 	ignore_duplicates := c.QueryParam("ignore_duplicates")
 	if ignore_duplicates != "true" {
-		fmt.Printf("%s\n", ignore_duplicates)
 		// check if recipe already added
 		r2, err := db.GetRecipeFromURL(handler.DB, r.Url)
 		if err != nil {
@@ -147,9 +146,11 @@ func (handler Handler) GetRecipe(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
 	}
-
-	recipe, err := db.GetRecipe(handler.DB, int(id))
-	return c.Render(http.StatusOK, "recipe.html", recipe)
+	r, err := db.GetRecipe(handler.DB, int(id))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+	return c.Render(http.StatusOK, "recipe.html", r)
 }
 
 func (handler Handler) RefetchRecipe(c echo.Context) error {
@@ -160,6 +161,9 @@ func (handler Handler) RefetchRecipe(c echo.Context) error {
 	}
 
 	r, err := db.GetRecipe(handler.DB, int(id))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
 
 	err = fetch_recipe(r)
 	if err != nil {

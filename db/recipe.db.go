@@ -16,7 +16,7 @@ type Recipe struct {
 	List         string   `form:"list"`
 	ImageUrl     string
 	ThumbnailUrl string
-	ListIds      []int
+	Lists        []List
 }
 
 func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
@@ -28,14 +28,40 @@ func GetRecipe(db *sql.DB, id int) (*Recipe, error) {
 						 ingredients,
 						 instructions,
 						 image_url,
-						 thumbnail_url,
-						 (select array_agg(parent_id) from link where id = child_id and child_type = 'recipe')
+						 thumbnail_url
                       from recipe
                       where id = $1`, id)
-	err := row.Scan(&r.Id, &r.Name, &r.Url, pq.Array(&r.Ingredients), pq.Array(&r.Instructions), &r.ImageUrl, &r.ThumbnailUrl, &r.ListIds)
+	err := row.Scan(
+		&r.Id,
+		&r.Name,
+		&r.Url,
+		pq.Array(&r.Ingredients),
+		pq.Array(&r.Instructions),
+		&r.ImageUrl,
+		&r.ThumbnailUrl,
+	)
 	if err != nil {
 		return r, err
 	}
+
+	rows, err := db.Query(`select id, name
+                        from link 
+						left join list on (link.parent_id = list.id)
+						where child_type = 'recipe' and child_id=$1`, id)
+	if err != nil {
+		return r, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var l List
+		err = rows.Scan(&l.Id, &l.Name)
+		if err != nil {
+			return r, err
+		}
+		r.Lists = append(r.Lists, l)
+	}
+
 	return r, nil
 }
 
