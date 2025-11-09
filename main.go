@@ -55,6 +55,7 @@ func main() {
 		e.Logger.Fatalf("unable to connect to database %b", err)
 	}
 	db.SetMaxIdleConns(20)
+	db.SetMaxOpenConns(20)
 	db.SetConnMaxLifetime(1000 * time.Millisecond)
 	h := &api.Handler{DB: db}
 	defer db.Close()
