@@ -1,4 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@theme {
+    --color-turquoise: oklch(0.83 0.11 190);
+    --color-jordy-blue: oklch(0.86 0.09 228);
+    --color-mauve-100: oklch(0.86 0.07 306);
+    --color-mauve-200: oklch(0.83 0.11 306);
+    --color-mauve-300: oklch(0.76 0.11 306);
+    --color-carnation-pink: oklch(0.87 0.11 335);
+    --color-seasalt: oklch(0.98 0 0);
+}
 
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;  
+    }
+}

@@ -5,8 +5,7 @@
             <a href="{{ .Url }}" target="_blank">{{ .Name }}</a>
             ({{ .Id }})
         </h1>
-        <div class="flex-grow"></div>
-        <button class="flex-shrink underline" hx-put="/recipe/refetch/{{ .Id }}" hx-target="body">refetch</button>
+            <button class="shrink underline" hx-put="/recipe/refetch/{{ .Id }}" hx-target="body">refetch</button>
     </div>
 </div>
 <hr class="mx-2" />

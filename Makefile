@@ -13,5 +13,5 @@ migrateup:
 	done
 
 tailwind:
-	tailwindcss -i public/css/styles.css -o public/css/output.css --watch
+	tailwindcss4 -i public/css/styles.css -o public/css/output.css --watch
 
