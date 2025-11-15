@@ -182,3 +182,18 @@ func GetListTree(db *sql.DB, list *ListTree, o GetListTreeOptions) error {
 
 	return nil
 }
+
+func CheckListExists(db *sql.DB, id int) (bool, error) {
+	var l List
+	row := db.QueryRow(`select id from list where id = $1`, id)
+	err := row.Scan(&l.Id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		} else {
+			return false, err
+		}
+	}
+
+	return true, nil
+}
