@@ -129,9 +129,15 @@ type ListTree struct {
 	Name    string
 	Lists   []*ListTree
 	Recipes []*Recipe
+	HasItem bool
 }
 
-func GetListTree(db *sql.DB, list *ListTree) error {
+type GetListTreeOptions struct {
+	SearchId int
+	SearchType string
+}
+
+func GetListTree(db *sql.DB, list *ListTree, o GetListTreeOptions) error {
 	rows, err := db.Query(`select child_id, name, child_type
                         from link 
 						left join list on (link.child_id = list.id)
@@ -156,7 +162,11 @@ func GetListTree(db *sql.DB, list *ListTree) error {
 				Name: name.String,
 			}
 			list.Lists = append(list.Lists, &l)
-			err = GetListTree(db, &l)
+			if o.SearchType == child_type && o.SearchId == l.Id {
+				list.HasItem = true
+			}
+
+			err = GetListTree(db, &l, o)
 			if err != nil {
 				return err
 			}
@@ -164,6 +174,9 @@ func GetListTree(db *sql.DB, list *ListTree) error {
 		} else if child_type == "recipe" {
 			r := Recipe{Id: id}
 			list.Recipes = append(list.Recipes, &r)
+			if o.SearchType == child_type && o.SearchId == r.Id {
+				list.HasItem = true
+			}
 		}
 	}
 
