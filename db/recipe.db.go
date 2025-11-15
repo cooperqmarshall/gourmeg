@@ -130,3 +130,24 @@ func UpdateRecipe(db *sql.DB, r *Recipe) error {
 
 	return nil
 }
+
+func PutRecipeLists(db *sql.DB, recipe_id int, list_ids []int) error {
+	_, err := db.Exec("delete from link where child_type = 'recipe' and child_id = $1", recipe_id)
+	if err != nil {
+		return err
+	}
+
+	stmt, err := db.Prepare("insert into link(parent_id, child_id, child_type) values( $1, $2, $3 )")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	for _, list_id := range list_ids {
+		_, err := stmt.Exec(list_id, recipe_id, "recipe")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

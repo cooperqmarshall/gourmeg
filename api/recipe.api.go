@@ -160,7 +160,7 @@ func (handler Handler) RefetchRecipe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
 	}
 
-	r, err := db.GetRecipe(handler.DB, int(id))
+	r, err := db.GetRecipe(handler.DB, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
 	}
@@ -176,4 +176,68 @@ func (handler Handler) RefetchRecipe(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "recipe.html", r)
+}
+
+func (handler Handler) GetRecipeEditLists(c echo.Context) error {
+	id_str := c.Param("id")
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
+	}
+
+	r, err := db.GetRecipe(handler.DB, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+
+	l := db.ListTree{Id: 0}
+	o := db.GetListTreeOptions{SearchId: r.Id, SearchType: "recipe"}
+	err = db.GetListTree(handler.DB, &l, o) // TODO: get root list id per user
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+	
+	type EditRecipeLists struct {
+		Id    int
+		Lists db.ListTree
+	}
+	d := EditRecipeLists{Id: id, Lists: l}
+
+	return c.Render(http.StatusOK, "edit-lists", d)
+}
+
+func (handler Handler) PutRecipeLists(c echo.Context) error {
+	id_str := c.Param("id")
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
+	}
+
+	var list_ids []int
+	err = echo.FormFieldBinder(c).Ints("list_ids", &list_ids).BindError()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("incorrectly formatted `list_ids` form field: %b", err))
+	}
+
+	for _, list_id := range list_ids {
+		ok, err := db.CheckListExists(handler.DB, list_id)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Errorf("error while checking lists exist: %b", err))
+		}
+		if !ok {
+			return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("list with id (%d) does not exist", list_id))
+		}
+	}
+
+	err = db.PutRecipeLists(handler.DB, id, list_ids)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Errorf("error while changing recipe's lists: %v", err))
+	}
+
+	r, err := db.GetRecipe(handler.DB, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+
+	return c.Render(http.StatusOK, "recipe", r)
 }
