@@ -56,7 +56,7 @@
 <h1 class="text-3xl font-bold border-b pb-2 mb-4 md:pb-4 md:mb-6 text-center">Gfdgsa</h1>
     <ul class="space-y-1">
         {{ range .Lists.Lists }}
-        {{ template "edit-tree" . }}
+        {{ template "edit-lists-tree" . }}
         {{ end }}
     </ul>
     <button type="submit"
@@ -64,7 +64,7 @@
 </form>
 {{ end }}
 
-{{ define "edit-tree" }}
+{{ define "edit-lists-tree" }}
 <li>
     <label class="flex justify-between items-center rounded-sm has-checked:bg-jordy-blue-100">
         <input type="checkbox" name="list_ids" value={{ .Id }} {{ if .HasItem }}checked{{ end }}>
@@ -75,7 +75,7 @@
     {{ if .Lists }}
     <ul class="ml-1 pt-2 pl-3 mb-3 border-l space-y-1">
         {{ range .Lists }}
-        {{ template "edit-tree" . }}
+        {{ template "edit-lists-tree" . }}
         {{ end }}
     </ul>
     {{ end }}
