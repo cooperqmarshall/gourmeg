@@ -1,9 +1,26 @@
 {{ define "body" }}
-<div id="list-content">
+{{ template "list" . }}
+{{ end }}
+
+{{ define "list" }}
+<div id="content">
+    <div class="mx-2 mb-2 flex flex-wrap items-center gap-2 text-sm">
+        <span class="font-medium">Part of:</span>
+        {{ if .Parent.Id }}
+        <a href="/list/{{ .Parent.Id }}"
+            class="px-2 py-1 bg-carnation-pink-100 border border-carnation-pink-900 rounded-full">
+            {{ .Parent.Name }}
+        </a>
+        {{ end }}
+        <button class="px-2 py-1 border border-dashed border-carnation-pink-900 rounded-full"
+            hx-get="/list/{{ .Id }}/edit-parent" hx-target="#content">
+            edit parent
+        </button>
+    </div>
     <h1 class="text-3xl py-2 mx-2 flex items-top items-center">
         <img class="w-14 inline-block pr-2" src="/static/book.svg" alt="" />
         {{ .Name }} ({{ .Id }})
-        <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#list-content">
+        <button class="underline" hx-get="/list/{{ .Id }}/edit" hx-target="#content">
             ...
         </button>
     </h1>
@@ -44,4 +61,50 @@
         {{ else }} {{ end }}
     </ul>
 </div>
+{{ end }}
+
+{{ define "part-of-lists" }}
+<div class="mx-2 mb-2 flex flex-wrap items-center gap-2 text-sm">
+    <span class="font-medium">Part of:</span>
+    {{ range .Lists }}
+    <a href="/list/{{ .Id }}" class="px-2 py-1 bg-carnation-pink-100 border border-carnation-pink-900 rounded-full">
+        {{ .Name }}
+    </a>
+    {{ end }}
+    <button class="px-2 py-1 border border-dashed border-carnation-pink-900 rounded-full"
+        hx-get="/recipe/{{ .Id }}/edit-lists" hx-target="#content">
+        edit lists
+    </button>
+</div>
+{{ end }}
+
+{{ define "edit-list-parent" }}
+<form class="flex flex-col" hx-put="/list/{{ .Id }}/parent">
+    <h1 class="text-3xl font-bold border-b pb-2 mb-4 md:pb-4 md:mb-6 text-center">Gfdgsa</h1>
+    <ul class="space-y-1">
+        {{ range .Lists.Lists }}
+        {{ template "edit-parent-tree" . }}
+        {{ end }}
+    </ul>
+    <button type="submit"
+        class="text-center px-2 py-1 mx-auto rounded-sm bg-carnation-pink-100 border border-carnation-pink-900">Save</button>
+</form>
+{{ end }}
+
+{{ define "edit-parent-tree" }}
+<li>
+    <label class="flex justify-between items-center rounded-sm has-checked:bg-jordy-blue-100">
+        <input type="radio" name="parent_id" value={{ .Id }} {{ if .HasItem }}checked{{ end }}>
+        <span class="pl-1">{{ .Name }}</span>
+        <span class="h-2 mx-1 border-b-2 border-dotted border-gray-300 grow"></span>
+        <span class="text-gray-500">{{ len .Recipes }}</span>
+    </label>
+    {{ if .Lists }}
+    <ul class="ml-1 pt-2 pl-3 mb-3 border-l space-y-1">
+        {{ range .Lists }}
+        {{ template "edit-parent-tree" . }}
+        {{ end }}
+    </ul>
+    {{ end }}
+</li>
 {{ end }}

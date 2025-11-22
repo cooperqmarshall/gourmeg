@@ -96,3 +96,65 @@ func (handler Handler) PostList(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "add_item_options_and_items", db.List{Id: parent_id, Children: []db.Item{item}})
 }
+
+func (handler Handler) GetListEditParent(c echo.Context) error {
+	id_str := c.Param("id")
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
+	}
+
+	list, err := db.GetList(handler.DB, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+
+	lt := db.ListTree{Id: 0}
+	o := db.GetListTreeOptions{SearchId: list.Id, SearchType: "list", SkipSearchId: true}
+	err = db.GetListTree(handler.DB, &lt, o) // TODO: get root list id per user
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+
+	type EditListParent struct {
+		Id    int
+		Lists db.ListTree
+	}
+	d := EditListParent{Id: id, Lists: lt}
+
+	return c.Render(http.StatusOK, "edit-list-parent", d)
+}
+
+func (handler Handler) PutListParent(c echo.Context) error {
+	id_str := c.Param("id")
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("id param (%s) not a number", id_str))
+	}
+
+	var parent_id int
+	err = echo.FormFieldBinder(c).Int("parent_id", &parent_id).BindError()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("incorrectly formatted `list_ids` form field: %b", err))
+	}
+
+	ok, err := db.CheckListExists(handler.DB, parent_id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Errorf("error while checking lists exist: %b", err))
+	}
+	if !ok {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("list with id (%d) does not exist", parent_id))
+	}
+
+	err = db.PutListParent(handler.DB, id, parent_id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Errorf("error while changing recipe's lists: %v", err))
+	}
+
+	l, err := db.GetList(handler.DB, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("%b", err))
+	}
+
+	return c.Render(http.StatusOK, "list", l)
+}

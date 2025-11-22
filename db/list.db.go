@@ -209,3 +209,17 @@ func CheckListExists(db *sql.DB, id int) (bool, error) {
 
 	return true, nil
 }
+
+func PutListParent(db *sql.DB, list_id int, parent_id int) error {
+	_, err := db.Exec("delete from link where child_type = 'list' and child_id = $1", list_id)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("insert into link(parent_id, child_id, child_type) values( $1, $2, $3 )", parent_id, list_id, "list")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

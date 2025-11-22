@@ -108,6 +108,8 @@ func main() {
 	e.DELETE("/list/:id", h.DeleteList)
 	e.POST("/list", h.PostList)
 	e.POST("/list_search", h.GetLists)
+	e.GET("/list/:id/edit-parent", h.GetListEditParent)
+	e.PUT("/list/:id/parent", h.PutListParent)
 
 	// list item
 	e.GET("/item/:id", h.GetItem)
