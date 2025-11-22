@@ -19,7 +19,7 @@ func GetList(db *sql.DB, id int) (List, error) {
 					  left join link on list.id = link.child_id and link.child_type = 'list'
 					  left join list as parent on link.parent_id = parent.id
                       where list.id = $1 limit 1`, id)
-	
+
 	var l List
 	var parent_id int
 	var parent_name sql.NullString
@@ -140,8 +140,9 @@ type ListTree struct {
 }
 
 type GetListTreeOptions struct {
-	SearchId   int
-	SearchType string
+	SearchId     int
+	SearchType   string
+	SkipSearchId bool
 }
 
 func GetListTree(db *sql.DB, list *ListTree, o GetListTreeOptions) error {
@@ -164,14 +165,18 @@ func GetListTree(db *sql.DB, list *ListTree, o GetListTreeOptions) error {
 		}
 
 		if child_type == "list" {
+			if o.SearchId == id {
+				list.HasItem = o.SearchType == child_type
+				if o.SkipSearchId {
+					continue
+				}
+			}
+
 			l := ListTree{
 				Id:   id,
 				Name: name.String,
 			}
 			list.Lists = append(list.Lists, &l)
-			if o.SearchType == child_type && o.SearchId == l.Id {
-				list.HasItem = true
-			}
 
 			err = GetListTree(db, &l, o)
 			if err != nil {
