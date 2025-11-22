@@ -10,15 +10,20 @@ type List struct {
 	Id       int
 	Name     string
 	Children []Item
+	Parent   *List
 }
 
 func GetList(db *sql.DB, id int) (List, error) {
+	row := db.QueryRow(`select list.id, list.name, link.parent_id, parent.name
+                      from list
+					  left join link on list.id = link.child_id and link.child_type = 'list'
+					  left join list as parent on link.parent_id = parent.id
+                      where list.id = $1 limit 1`, id)
+	
 	var l List
-	row := db.QueryRow(`select id, name 
-                      from list 
-                      where id = $1`, id)
-
-	err := row.Scan(&l.Id, &l.Name)
+	var parent_id int
+	var parent_name sql.NullString
+	err := row.Scan(&l.Id, &l.Name, &parent_id, &parent_name)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// no matches found
@@ -26,6 +31,8 @@ func GetList(db *sql.DB, id int) (List, error) {
 			return l, err
 		}
 	}
+	parent_list := List{Id: parent_id, Name: parent_name.String}
+	l.Parent = &parent_list
 
 	rows, err := db.Query(`select 
                     coalesce(list.id, recipe.id) as id, 
@@ -133,7 +140,7 @@ type ListTree struct {
 }
 
 type GetListTreeOptions struct {
-	SearchId int
+	SearchId   int
 	SearchType string
 }
 
