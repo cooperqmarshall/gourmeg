@@ -24,6 +24,14 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "url cannot be empty")
 	}
 
+	url, err := url.Parse(r.Url)
+	if err == nil {
+		url.RawQuery = ""
+		url.Fragment = ""
+		url.ForceQuery = false
+		r.Url = url.String()
+	}
+
 	ignore_duplicates := c.QueryParam("ignore_duplicates")
 	if ignore_duplicates != "true" {
 		// check if recipe already added
@@ -44,7 +52,7 @@ func (handler Handler) PostRecipe(c echo.Context) error {
 		}
 	}
 
-	err := fetch_recipe(r)
+	err = fetch_recipe(r)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
